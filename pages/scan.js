@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
     let detectInterval;
     let faceOk = false;
+
+    let progress = 0;
+let blinkDetected = false;
   
     async function loadModels() {
       await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
@@ -38,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let isProcessing = false;
   
     function detectFace() {
+        if (detectInterval) clearInterval(detectInterval);
       detectInterval = setInterval(async () => {
 
         if (isProcessing) return;
@@ -56,8 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!detections) {
             statusText.innerText = "No face detected ❌";
             captureBtn.disabled = true;
-            faceOk = true;
+            faceOk = false;
             captureBtn.classList.remove("active");
+            progress = 0;
             ring.style.strokeDashoffset = 754;
           
             isProcessing = false; 
@@ -78,7 +83,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isClose) {
             statusText.innerText = "Come closer 📸";
             captureBtn.disabled = true;
-            ring.style.strokeDashoffset = 500;
+            progress = 30;
+ring.style.strokeDashoffset = 754 - (progress * 7.54);
           
             isProcessing = false; 
             return;
@@ -88,19 +94,45 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isCentered) {
             statusText.innerText = "Center your face 🎯";
             captureBtn.disabled = true;
-            ring.style.strokeDashoffset = 300;
+            progress = 60;
+ring.style.strokeDashoffset = 754 - (progress * 7.54);
           
             isProcessing = false; 
             return;
           }
-  
+
+
+          const landmarks = detections.landmarks;
+
+const leftEye = landmarks.getLeftEye();
+const rightEye = landmarks.getRightEye();
+
+// simple blink logic (distance check)
+const eyeHeight = Math.abs(leftEye[1].y - leftEye[5].y);
+
+if (eyeHeight < 5) {
+  blinkDetected = true;
+}
+
+          
         // ✅ PERFECT
-        statusText.innerText = "Perfect! Ready ✅";
-        captureBtn.disabled = false;
-        captureBtn.classList.add("active");
-        faceOk = true;
-        
-        ring.style.strokeDashoffset = 0;
+        if (!blinkDetected) {
+  statusText.innerText = "Blink your eyes 👁";
+  progress = 80;
+ring.style.strokeDashoffset = 754 - (progress * 7.54);
+  captureBtn.disabled = true;
+  isProcessing = false;
+  return;
+}
+
+// FINAL SUCCESS
+statusText.innerText = "Perfect! Ready ✅";
+captureBtn.disabled = false;
+captureBtn.classList.add("active");
+faceOk = true;
+
+progress = 100;
+ring.style.strokeDashoffset = 0;
         
         isProcessing = false; 
   
@@ -138,6 +170,24 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   
     // 🔁 RETRY
-    retryBtn.onclick = () => location.reload();
+    retryBtn.onclick = () => {
+
+  const wrapper = document.querySelector(".camera-wrapper");
+  const oldImg = wrapper.querySelector("img");
+  if (oldImg) oldImg.remove();
+
+  video.style.display = "block";
+
+  faceOk = false;
+  blinkDetected = false;
+  progress = 0;
+
+  captureBtn.disabled = true;
+  captureBtn.classList.remove("active");
+
+  statusText.innerText = "Align your face";
+
+  detectFace(); // restart detection
+};
   
   });

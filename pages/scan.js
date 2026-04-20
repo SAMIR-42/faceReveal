@@ -86,7 +86,7 @@ let blinkDetected = false;
             statusText.innerText = "Come closer 📸";
             captureBtn.disabled = true;
             faceOk = false;
-            progress = 30;
+            progress = Math.min(progress + 10, 30);
 ring.style.strokeDashoffset = 754 - (progress * 7.54);
           
             isProcessing = false; 
@@ -98,7 +98,7 @@ ring.style.strokeDashoffset = 754 - (progress * 7.54);
             statusText.innerText = "Center your face 🎯";
             captureBtn.disabled = true;
             faceOk = false;
-            progress = 60;
+            progress = Math.min(progress + 10, 60);
 ring.style.strokeDashoffset = 754 - (progress * 7.54);
           
             isProcessing = false; 
@@ -121,15 +121,11 @@ if (eyeRatio < 0.2) {
   blinkDetected = true;
 }
 
-if (eyeHeight < 5) {
-  blinkDetected = true;
-}
-
           
         // ✅ PERFECT
         if (!blinkDetected) {
   statusText.innerText = "Blink your eyes 👁";
-  progress = 80;
+  progress = Math.min(progress + 10, 80);
 ring.style.strokeDashoffset = 754 - (progress * 7.54);
   captureBtn.disabled = true;
   isProcessing = false;
@@ -181,18 +177,12 @@ ring.style.strokeDashoffset = 0;
     };
   
     // 🔁 RETRY
-    retryBtn.onclick = () => {
+    retryBtn.onclick = async () => {
 
-        const stream = video.srcObject;
-if (stream) {
-  stream.getTracks().forEach(track => track.stop());
-}
-
-// restart camera
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(newStream => {
-    video.srcObject = newStream;
-  });
+  const stream = video.srcObject;
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+  }
 
   const wrapper = document.querySelector(".camera-wrapper");
   const oldImg = wrapper.querySelector("img");
@@ -209,9 +199,12 @@ navigator.mediaDevices.getUserMedia({ video: true })
 
   statusText.innerText = "Align your face";
 
-  detectFace(); // restart detection
-        if (detectInterval) clearInterval(detectInterval);
-detectFace();
+  // restart camera
+  const newStream = await navigator.mediaDevices.getUserMedia({ video: true });
+  video.srcObject = newStream;
+
+  if (detectInterval) clearInterval(detectInterval);
+  detectFace();
 };
   
   });

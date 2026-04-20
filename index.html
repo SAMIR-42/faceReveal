@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FaceReveal — Face Personality Test</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="bg"></div>
+
+    <!-- Theme Toggle
+    <button class="theme-toggle">🌙</button> -->
+
+    <header class="header">
+      <div class="header-content">
+        <!-- Left: Logo + Name -->
+        <div class="logo">
+          <div class="logo-icon"></div>
+          <span>FaceReveal</span>
+        </div>
+
+        <!-- Right: Nav -->
+        <nav class="nav">
+          <a href="#">About</a>
+          <a href="#">Privacy</a>
+          <a href="#">Contact</a>
+        </nav>
+        <button class="theme-toggle"><i class="fa-solid fa-eye"></i></button>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+      <div class="hero">
+        <!-- LEFT CONTENT -->
+        <div class="hero-left">
+          <h1 class="headline">What Your Face Says About You</h1>
+
+          <p class="subtext">
+            Discover hidden traits and emotions your face reveals.
+          </p>
+
+          <button class="cta-btn">Start Face Scan</button>
+
+          <span class="trust"> Trusted by 100K+ users </span>
+        </div>
+
+        <!-- RIGHT IMAGE -->
+        <div class="hero-right">
+          <div class="slider">
+            <img class="slide active" src="assets/face.png" />
+            <img class="slide" src="assets/pic2.jpeg" />
+            <img class="slide" src="assets/pic3.png" />
+            <img class="slide" src="assets/pic4.png" />
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- TRUST STATS SECTION -->
+    <section class="stats" id="statsSection">
+      <div class="stat-box">
+        <h2 class="count" data-target="100000">0</h2>
+        <p>Trusted Users</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 class="count" data-target="250000">0</h2>
+        <p>Faces Analyzed</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 class="count" data-target="98">0</h2>
+        <p>Accuracy %</p>
+      </div>
+    </section>
+
+    <!-- CURIOSITY SWIPE SECTION -->
+    <section class="curiosity-section">
+      <h2 class="curiosity-title">What Your Face Secretly Reveals About You</h2>
+
+      <p class="curiosity-sub">
+        Your expressions, eyes & micro-behaviour silently expose more than you
+        think.
+      </p>
+
+      <div class="card-slider">
+        <div class="card">
+          <i class="fa-solid fa-brain"></i>
+          <h3>Personality Type</h3>
+          <p>
+            Are you dominant, calm or emotionally deep? Your face already leaks
+            it.
+          </p>
+        </div>
+
+        <div class="card">
+          <i class="fa-solid fa-heart"></i>
+          <h3>Attraction Signal</h3>
+          <p>
+            People subconsciously decide your “likability score” in 0.2 seconds.
+          </p>
+        </div>
+
+        <div class="card">
+          <i class="fa-solid fa-eye"></i>
+          <h3>Hidden Emotions</h3>
+          <p>Your eyes reveal stress, confidence & truth you don’t speak.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PSYCHOLOGY TRIGGER SWIPE SECTION -->
+<section class="mind-swipe" id="mindSwipe">
+
+  <div class="mind-left">
+
+    <div class="mind-card active">
+      <i class="fa-solid fa-face-surprise"></i>
+      <h3>Do you overthink your looks?</h3>
+      <p>Most people secretly judge their own face more than others do.</p>
+    </div>
+
+    <div class="mind-card">
+      <i class="fa-solid fa-comments"></i>
+      <h3>Why do people misunderstand you?</h3>
+      <p>Your expressions might be sending the wrong signal.</p>
+    </div>
+
+    <div class="mind-card">
+      <i class="fa-solid fa-eye"></i>
+      <h3>Are you instantly likeable?</h3>
+      <p>Some faces trigger trust before a single word is spoken.</p>
+    </div>
+
+    <div class="mind-card">
+      <i class="fa-solid fa-brain"></i>
+      <h3>What your face hides daily?</h3>
+      <p>Your micro reactions reveal emotions you never notice.</p>
+    </div>
+
+    <div class="mind-card final">
+      <h3>Want to decode yourself?</h3>
+      <button class="mind-btn">Analyze My Face</button>
+    </div>
+
+  </div>
+
+  <div class="mind-right">
+
+    <div class="mind-img active">
+      <img src="assets/pic5.jpg">
+    </div>
+
+    <div class="mind-img">
+      <img src="assets/pic6.jpg">
+    </div>
+
+    <div class="mind-img">
+      <img src="assets/pic7.jpg">
+    </div>
+
+    <div class="mind-img">
+    <img src="assets/pic8.jpg">
+    </div>
+
+  </div>
+
+</section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <!-- Brand -->
+        <div class="footer-left">
+          <h3>FaceReveal</h3>
+          <p>AI-powered face personality insights for curiosity & fun.</p>
+        </div>
+
+        <!-- Links -->
+        <div class="footer-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
+          <a href="#">About</a>
+        </div>
+
+        <!-- Social -->
+        <div class="footer-icons">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+          <a href="#"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 FaceReveal • Built with curiosity ✨</p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

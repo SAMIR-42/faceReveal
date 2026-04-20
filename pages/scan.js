@@ -179,17 +179,20 @@ ring.style.strokeDashoffset = 0;
     // 🔁 RETRY
     retryBtn.onclick = async () => {
 
+  // stop old stream
   const stream = video.srcObject;
   if (stream) {
     stream.getTracks().forEach(track => track.stop());
   }
 
+  // remove old image
   const wrapper = document.querySelector(".camera-wrapper");
   const oldImg = wrapper.querySelector("img");
   if (oldImg) oldImg.remove();
 
   video.style.display = "block";
 
+  // reset states
   faceOk = false;
   blinkDetected = false;
   progress = 0;
@@ -203,6 +206,7 @@ ring.style.strokeDashoffset = 0;
   const newStream = await navigator.mediaDevices.getUserMedia({ video: true });
   video.srcObject = newStream;
 
+  // restart detection
   if (detectInterval) clearInterval(detectInterval);
   detectFace();
 };

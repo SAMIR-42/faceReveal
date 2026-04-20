@@ -17,8 +17,7 @@ toggle.addEventListener("click", () => {
 
 // CTA click (future navigation)
 document.querySelector(".cta-btn").addEventListener("click", () => {
-  // future: camera page redirect
-  console.log("Start Scan Clicked");
+  window.location.href = "pages/scan.html";
 });
 
 const slides = document.querySelectorAll(".slider .slide");

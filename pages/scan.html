@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Face Scan — FaceReveal</title>
+
+    <script
+      defer
+      src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"
+    ></script>
+
+    <link rel="stylesheet" href="scan.css" />
+  </head>
+  <body>
+    <!-- HEADER (same feel) -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        <span>FaceReveal</span>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <div class="scan-container">
+      <!-- CAMERA CIRCLE -->
+      <div class="camera-wrapper">
+        <!-- progress ring -->
+        <svg class="progress-ring" width="260" height="260">
+          <circle cx="130" cy="130" r="120" class="ring-bg" />
+          <circle cx="130" cy="130" r="120" class="ring-progress" />
+        </svg>
+
+        <!-- video -->
+        <video id="video" autoplay playsinline></video>
+
+        <!-- overlay text -->
+        <div class="overlay-text">Align your face</div>
+
+        <!-- fake scan corners -->
+        <div class="corners">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <p id="statusText">Waiting for camera...</p>
+
+      <!-- BUTTON -->
+      <button id="startBtn">Enable Camera</button>
+      <div class="action-row">
+        <button id="captureBtn" disabled>Capture</button>
+        <button id="retryBtn">↻</button>
+      </div>
+    </div>
+
+    <script src="scan.js"></script>
+  </body>
+</html>

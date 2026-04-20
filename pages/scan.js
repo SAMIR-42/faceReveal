@@ -46,6 +46,8 @@ let blinkDetected = false;
 
         if (isProcessing) return;
         isProcessing = true;
+
+          blinkDetected = false;
         
         if (!video.videoWidth) {
           isProcessing = false;
@@ -83,6 +85,7 @@ let blinkDetected = false;
         if (!isClose) {
             statusText.innerText = "Come closer 📸";
             captureBtn.disabled = true;
+            faceOk = false;
             progress = 30;
 ring.style.strokeDashoffset = 754 - (progress * 7.54);
           
@@ -94,6 +97,7 @@ ring.style.strokeDashoffset = 754 - (progress * 7.54);
         if (!isCentered) {
             statusText.innerText = "Center your face 🎯";
             captureBtn.disabled = true;
+            faceOk = false;
             progress = 60;
 ring.style.strokeDashoffset = 754 - (progress * 7.54);
           
@@ -109,6 +113,13 @@ const rightEye = landmarks.getRightEye();
 
 // simple blink logic (distance check)
 const eyeHeight = Math.abs(leftEye[1].y - leftEye[5].y);
+const eyeWidth = Math.abs(leftEye[0].x - leftEye[3].x);
+
+const eyeRatio = eyeHeight / eyeWidth;
+
+if (eyeRatio < 0.2) {
+  blinkDetected = true;
+}
 
 if (eyeHeight < 5) {
   blinkDetected = true;
@@ -172,6 +183,17 @@ ring.style.strokeDashoffset = 0;
     // 🔁 RETRY
     retryBtn.onclick = () => {
 
+        const stream = video.srcObject;
+if (stream) {
+  stream.getTracks().forEach(track => track.stop());
+}
+
+// restart camera
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(newStream => {
+    video.srcObject = newStream;
+  });
+
   const wrapper = document.querySelector(".camera-wrapper");
   const oldImg = wrapper.querySelector("img");
   if (oldImg) oldImg.remove();
@@ -188,6 +210,8 @@ ring.style.strokeDashoffset = 0;
   statusText.innerText = "Align your face";
 
   detectFace(); // restart detection
+        if (detectInterval) clearInterval(detectInterval);
+detectFace();
 };
   
   });

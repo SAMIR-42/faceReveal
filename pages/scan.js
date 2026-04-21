@@ -158,6 +158,8 @@ isProcessing = false;
       canvas.height = video.videoHeight;
   
       const ctx = canvas.getContext("2d");
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
       ctx.filter = "brightness(1.05) contrast(1.05) saturate(1.1)";
       ctx.drawImage(video, 0, 0);
   

@@ -47,7 +47,7 @@ let blinkDetected = false;
         if (isProcessing) return;
         isProcessing = true;
 
-          blinkDetected = false;
+        
         
         if (!video.videoWidth) {
           isProcessing = false;
@@ -117,21 +117,28 @@ const eyeWidth = Math.abs(leftEye[0].x - leftEye[3].x);
 
 const eyeRatio = eyeHeight / eyeWidth;
 
-if (eyeRatio < 0.2) {
+if (eyeRatio < 0.25) {
   blinkDetected = true;
 }
 
           
         // ✅ PERFECT
-        if (!blinkDetected) {
-  statusText.innerText = "Blink your eyes 👁";
-  progress = Math.min(progress + 10, 80);
-ring.style.strokeDashoffset = 754 - (progress * 7.54);
-  captureBtn.disabled = true;
-  isProcessing = false;
-  return;
+// face already good → allow capture instantly
+statusText.innerText = "Perfect! Ready ✅";
+captureBtn.disabled = false;
+captureBtn.classList.add("active");
+faceOk = true;
+
+// optional blink boost
+if (blinkDetected) {
+  progress = 100;
+} else {
+  progress = Math.min(progress + 10, 90);
 }
 
+ring.style.strokeDashoffset = 754 - (progress * 7.54);
+
+isProcessing = false;
 // FINAL SUCCESS
 statusText.innerText = "Perfect! Ready ✅";
 captureBtn.disabled = false;

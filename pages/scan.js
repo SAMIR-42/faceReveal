@@ -60,7 +60,7 @@ let blinkDetected = false;
   
         // ❌ no face
         if (!detections) {
-            statusText.innerText = "No face detected ❌";
+          statusText.innerHTML = 'No face detected <i class="fa-solid fa-face-frown"></i>';
             captureBtn.disabled = true;
             faceOk = false;
             captureBtn.classList.remove("active");
@@ -83,7 +83,7 @@ let blinkDetected = false;
   
         // ❌ too far
         if (!isClose) {
-            statusText.innerText = "Come closer 📸";
+          statusText.innerHTML = 'Come closer <i class="fa-solid fa-camera"></i>';
             captureBtn.disabled = true;
             faceOk = false;
             progress = Math.min(progress + 10, 30);
@@ -95,7 +95,7 @@ ring.style.strokeDashoffset = 754 - (progress * 7.54);
   
         // ❌ not centered
         if (!isCentered) {
-            statusText.innerText = "Center your face 🎯";
+          statusText.innerHTML = 'Center your face <i class="fa-solid fa-crosshairs"></i>';
             captureBtn.disabled = true;
             faceOk = false;
             progress = Math.min(progress + 10, 60);
@@ -124,7 +124,7 @@ if (eyeRatio < 0.25) {
           
         // ✅ PERFECT
 // face already good → allow capture instantly
-statusText.innerText = "Perfect! Ready ✅";
+statusText.innerHTML = 'Face Verified <i class="fa-solid fa-circle-check"></i>';
 captureBtn.disabled = false;
 captureBtn.classList.add("active");
 faceOk = true;

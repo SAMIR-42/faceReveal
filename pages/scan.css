@@ -58,6 +58,11 @@
     border-radius: 50%;
     position: absolute;
   }
+
+  video {
+    transform: scaleX(-1);
+    filter: brightness(1.05) contrast(1.05) saturate(1.1) blur(0.3px);
+  }
   
   /* RING */
   .progress-ring {

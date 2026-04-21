@@ -139,17 +139,6 @@ if (blinkDetected) {
 ring.style.strokeDashoffset = 754 - (progress * 7.54);
 
 isProcessing = false;
-// FINAL SUCCESS
-statusText.innerText = "Perfect! Ready ✅";
-captureBtn.disabled = false;
-captureBtn.classList.add("active");
-faceOk = true;
-
-progress = 100;
-ring.style.strokeDashoffset = 0;
-        
-        isProcessing = false; 
-  
       }, 400);
     }
   
@@ -169,6 +158,7 @@ ring.style.strokeDashoffset = 0;
       canvas.height = video.videoHeight;
   
       const ctx = canvas.getContext("2d");
+      ctx.filter = "brightness(1.05) contrast(1.05) saturate(1.1)";
       ctx.drawImage(video, 0, 0);
   
       const img = document.createElement("img");

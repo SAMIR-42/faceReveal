@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!detections) {
             statusText.innerText = "No face detected ❌";
             captureBtn.disabled = true;
-            faceOk = true;
+            faceOk = false;
             captureBtn.classList.remove("active");
             ring.style.strokeDashoffset = 754;
           
@@ -69,10 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const centerX = video.videoWidth / 2;
         const faceCenter = box.x + box.width / 2;
   
-        const tolerance = video.videoWidth * 0.15;
+        const tolerance = video.videoWidth * 0.25;
         const isCentered = Math.abs(centerX - faceCenter) < tolerance;
   
-        const isClose = box.width > video.videoWidth * 0.25;
+        const isClose = box.width > video.videoWidth * 0.18;
   
         // ❌ too far
         if (!isClose) {
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         isProcessing = false; 
   
-      }, 700);
+      }, 400);
     }
   
     // 📸 CAPTURE

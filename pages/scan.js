@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const captureBtn = document.getElementById("captureBtn");
     const retryBtn = document.getElementById("retryBtn");
     const ring = document.querySelector(".ring-progress");
+    const scanAnimation = document.getElementById("scanAnimation");
+   
+    retryBtn.disabled = true;
   
     let detectInterval;
     let faceOk = false;
@@ -19,6 +22,7 @@ let blinkDetected = false;
     }
   
     btn.onclick = async () => {
+      
       statusText.innerText = "Loading AI models...";
   
       try {
@@ -29,6 +33,11 @@ let blinkDetected = false;
   
         statusText.innerText = "Camera started...";
         btn.style.display = "none";
+
+         // 👇 yaha add kar
+         scanAnimation.classList.add("hide-scan");
+
+         retryBtn.disabled = true;
   
         detectFace();
   
@@ -36,6 +45,8 @@ let blinkDetected = false;
         console.error(err);
         statusText.innerText = "Camera / Model error ❌";
       }
+
+      
     };
 
     let isProcessing = false;
@@ -173,41 +184,33 @@ isProcessing = false;
   
       video.style.display = "none";
       document.querySelector(".camera-wrapper").appendChild(img);
+
+      retryBtn.disabled = false;
     };
   
     // 🔁 RETRY
-    retryBtn.onclick = async () => {
+    retryBtn.onclick = () => {
 
-  // stop old stream
-  const stream = video.srcObject;
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop());
-  }
-
-  // remove old image
-  const wrapper = document.querySelector(".camera-wrapper");
-  const oldImg = wrapper.querySelector("img");
-  if (oldImg) oldImg.remove();
-
-  video.style.display = "block";
-
-  // reset states
-  faceOk = false;
-  blinkDetected = false;
-  progress = 0;
-
-  captureBtn.disabled = true;
-  captureBtn.classList.remove("active");
-
-  statusText.innerText = "Align your face";
-
-  // restart camera
-  const newStream = await navigator.mediaDevices.getUserMedia({ video: true });
-  video.srcObject = newStream;
-
-  // restart detection
-  if (detectInterval) clearInterval(detectInterval);
-  detectFace();
-};
-  
-  });
+      // remove captured image
+      const wrapper = document.querySelector(".camera-wrapper");
+      const oldImg = wrapper.querySelector("img");
+      if (oldImg) oldImg.remove();
+    
+      // video wapas show
+      video.style.display = "block";
+    
+      // reset states
+      faceOk = false;
+      blinkDetected = false;
+      progress = 0;
+    
+      captureBtn.disabled = true;
+      captureBtn.classList.remove("active");
+    
+      retryBtn.disabled = true;
+    
+      statusText.innerText = "Align your face";
+    };
+    
+    // 👇 YE MISSING THA
+    });

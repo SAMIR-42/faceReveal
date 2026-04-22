@@ -50,7 +50,7 @@ function getRandomCategories(arr, count) {
 
 const selectedCats = getRandomCategories(
   Object.keys(data), 
-  2
+  3   // 👈 2 → 3
 );
 
 // free lines collect
@@ -65,12 +65,18 @@ selectedCats.forEach(cat => {
 
 const resultDiv = document.getElementById("freeResults");
 
-freeLines.forEach(line => {
-  const p = document.createElement("p");
-  p.innerText = line;
-  resultDiv.appendChild(p);
-});
+freeLines.forEach((line, i) => {
+  const div = document.createElement("div");
+  div.classList.add("result-line");
 
+  // 👇 last line blur
+  if (i === freeLines.length - 1) {
+    div.classList.add("blur-line");
+  }
+
+  div.innerText = line;
+  resultDiv.appendChild(div);
+});
 
 document.getElementById("unlockBtn").onclick = () => {
   alert("Payment coming soon 😏");

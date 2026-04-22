@@ -175,3 +175,64 @@
     color: #666;
     margin-top: 4px;
   }
+
+  .result-line {
+    background: linear-gradient(135deg, #f9fafc, #ffffff);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #222;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+  
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.6s ease forwards;
+  }
+  
+  /* delay effect */
+  .result-line:nth-child(1){ animation-delay: 0.2s; }
+  .result-line:nth-child(2){ animation-delay: 0.5s; }
+  .result-line:nth-child(3){ animation-delay: 0.8s; }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+  .blur-line {
+    filter: blur(4px);
+    position: relative;
+  }
+  
+  /* overlay text */
+  .blur-line::after {
+    content: "Unlock to reveal";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.85);
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    color: #444;
+  }
+
+
+  #unlockBtn {
+    margin: 20px auto;
+    display: block;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6c63ff, #4a42e8);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(108,99,255,0.3);
+  }

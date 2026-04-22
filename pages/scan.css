@@ -398,9 +398,21 @@
   object-fit: contain;
   transform: scale(0.85);
   border-radius: 50%;
-  z-index: 1;
+ 
   opacity: 1;
   transition: opacity 0.3s ease;
+}
+#scanAnimation {
+  z-index: 0; /* sabse neeche */
+}
+
+#video {
+  z-index: 2;
+}
+
+.camera-wrapper img {
+  position: absolute;
+  z-index: 3; /* sabse upar */
 }
 
 /* camera above animation */

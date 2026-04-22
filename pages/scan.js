@@ -156,50 +156,56 @@ isProcessing = false;
     // 📸 CAPTURE
     captureBtn.onclick = () => {
 
-        if (!faceOk) return;
-
-  const wrapper = document.querySelector(".camera-wrapper");
-  const oldImg = wrapper.querySelector("img");
-  if (oldImg) oldImg.remove();
-
-  clearInterval(detectInterval);
-  
+      if (!faceOk) return;
+    
+      const wrapper = document.querySelector(".camera-wrapper");
+      const oldImg = wrapper.querySelector("img");
+      if (oldImg) oldImg.remove();
+    
+      clearInterval(detectInterval);
+    
+      // 👇 animation hide
+      scanAnimation.classList.add("hide-scan");
+    
       const canvas = document.createElement("canvas");
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-  
+    
       const ctx = canvas.getContext("2d");
       ctx.translate(canvas.width, 0);
       ctx.scale(-1, 1);
       ctx.filter = "brightness(1.05) contrast(1.05) saturate(1.1)";
       ctx.drawImage(video, 0, 0);
-  
+    
       const img = document.createElement("img");
       img.src = canvas.toDataURL("image/png");
-  
+    
       img.style.width = "100%";
       img.style.height = "100%";
       img.style.objectFit = "cover";
       img.style.borderRadius = "50%";
-  
+    
       video.style.display = "none";
-      document.querySelector(".camera-wrapper").appendChild(img);
-
+      wrapper.appendChild(img);
+    
       retryBtn.disabled = false;
     };
-  
     // 🔁 RETRY
     retryBtn.onclick = () => {
 
-      // remove captured image
       const wrapper = document.querySelector(".camera-wrapper");
+    
+      // ❌ old image remove
       const oldImg = wrapper.querySelector("img");
       if (oldImg) oldImg.remove();
     
-      // video wapas show
+      // ✅ video wapas
       video.style.display = "block";
     
-      // reset states
+      // ✅ animation wapas show
+      scanAnimation.classList.remove("hide-scan");
+    
+      // ✅ reset states
       faceOk = false;
       blinkDetected = false;
       progress = 0;
@@ -210,7 +216,8 @@ isProcessing = false;
       retryBtn.disabled = true;
     
       statusText.innerText = "Align your face";
-    };
     
-    // 👇 YE MISSING THA
-    });
+      // ✅ IMPORTANT: detection restart kar
+      detectFace();
+    };
+});

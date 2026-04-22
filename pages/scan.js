@@ -193,6 +193,8 @@ isProcessing = false;
     
       video.style.display = "none";
       wrapper.appendChild(img);
+
+      localStorage.setItem("faceImage", img.src);
     
       retryBtn.disabled = false;
 
@@ -204,6 +206,8 @@ isProcessing = false;
 
         // optional: thoda premium feel
         captureBtn.classList.add("active");
+
+        
     };
     // 🔁 RETRY
     retryBtn.onclick = () => {

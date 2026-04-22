@@ -1,3 +1,4 @@
+import { categories, data } from "./data.js";
 document.addEventListener("DOMContentLoaded", () => {
 
     // ✅ user image
@@ -40,5 +41,41 @@ document.addEventListener("DOMContentLoaded", () => {
     miniFaces.forEach((el, i) => {
       el.src = selected[i];
     });
+
+
+// pick 2 random categories
+function getRandomCategories(arr, count) {
+  return [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+const selectedCats = getRandomCategories(
+  Object.keys(data), 
+  2
+);
+
+// free lines collect
+let freeLines = [];
+
+selectedCats.forEach(cat => {
+  const lines = data[cat].free;
+  const randomLine = lines[Math.floor(Math.random() * lines.length)];
+  freeLines.push(randomLine);
+});
+
+
+const resultDiv = document.getElementById("freeResults");
+
+freeLines.forEach(line => {
+  const p = document.createElement("p");
+  p.innerText = line;
+  resultDiv.appendChild(p);
+});
+
+
+document.getElementById("unlockBtn").onclick = () => {
+  alert("Payment coming soon 😏");
+};
+
+
   
   });

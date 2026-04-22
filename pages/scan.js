@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     let detectInterval;
     let faceOk = false;
-
+    let isCaptured = false;
     let progress = 0;
 let blinkDetected = false;
   
@@ -156,6 +156,12 @@ isProcessing = false;
     // 📸 CAPTURE
     captureBtn.onclick = () => {
 
+        // 👇 agar already capture ho chuka hai
+      if (isCaptured) {
+        window.location.href = "/pages/analysis.html";
+       return;
+      }
+
       if (!faceOk) return;
     
       const wrapper = document.querySelector(".camera-wrapper");
@@ -189,6 +195,15 @@ isProcessing = false;
       wrapper.appendChild(img);
     
       retryBtn.disabled = false;
+
+      // ✅ mark captured
+      isCaptured = true;
+
+      // ✅ button text change
+      captureBtn.innerText = "Reveal Personality";
+
+        // optional: thoda premium feel
+        captureBtn.classList.add("active");
     };
     // 🔁 RETRY
     retryBtn.onclick = () => {
@@ -219,5 +234,9 @@ isProcessing = false;
     
       // ✅ IMPORTANT: detection restart kar
       detectFace();
+
+      // 🔁 reset button back
+      isCaptured = false;
+      captureBtn.innerText = "Capture";
     };
 });

@@ -158,7 +158,7 @@ isProcessing = false;
 
         // 👇 agar already capture ho chuka hai
       if (isCaptured) {
-        window.location.href = "/pages/analysis.html";
+        window.location.href = "analysis.html";
        return;
       }
 

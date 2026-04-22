@@ -34,23 +34,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    text-align: center;
-  }
   
+    justify-content: flex-start; /* 👈 upar le aayega */
+    padding-top: 5px; /* 👈 thoda breathing space */
+    padding-left: 20px;
+    padding-right: 20px;
+  
+    text-align: center;
+  } 
+
   /* TITLE */
   .title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
   /* SUBTITLE */
   .subtitle {
     font-size: 13px;
-    color: #555;
-    max-width: 260px;
+    color: #666;
+    max-width: 280px;
+    line-height: 1.5;
   }
   
   /* RESULT BOX */
@@ -75,6 +81,7 @@
     width: 55px;
     height: 55px;
     position: relative;
+    margin-left: 6px; 
   }
   
   /* 👇 image ko alag wrapper me crop karo */
@@ -85,6 +92,8 @@
     overflow: hidden;
     border: 2px solid #00ff88;
   }
+
+ 
   
   .img-wrapper img {
     width: 100%;
@@ -102,4 +111,67 @@
     color: #00ff88;
     font-size: 16px;
     box-shadow: 0 0 8px rgba(0,255,136,0.6);
+  }
+
+ 
+
+  /* wrapper (face + stack ek line me) */
+.face-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 15px;
+  }
+  
+  /* stack container */
+  .community-stack {
+    display: flex;
+    flex-direction: column;
+    
+    align-items: flex-end;
+  }
+  
+  /* circles */
+  .stack {
+    position: relative;
+    height: 40px;
+    width: 70px; /* 👈 fixed width de */
+  }
+  
+  /* small images */
+  .mini-face {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    position: absolute;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  }
+  
+  /* stagger effect */
+  .mini-face:nth-child(1) {
+    left: 0;
+    top: 12px;
+    z-index: 1;
+  }
+  
+  .mini-face:nth-child(2) {
+    left: 16px;
+    top: 12px;
+    z-index: 2;
+  }
+  
+  .mini-face:nth-child(3) {
+    left: 32px;
+    top: 12px;
+    z-index: 3;
+  }
+  
+  /* text */
+  .community-text {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
   }

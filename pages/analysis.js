@@ -169,11 +169,15 @@ fetch("/save-result", {
         userId: userId
       })
     });
-  
-    const data = await res.json();
-  
-    // redirect to payment page
-    window.location.href = data.payment_link;
+    const text = await res.text();
+
+    try {
+      const data = JSON.parse(text);
+      window.location.href = data.payment_link;
+    } catch (e) {
+      console.error("Payment Error:", text);
+      alert("Payment start nahi hua, console check kar");
+    }
   };
 
 });

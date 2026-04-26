@@ -33,39 +33,43 @@ db.connect((err) => {
   }
 });
 
-
 app.post("/create-order", async (req, res) => {
   const { userId } = req.body;
 
   const orderId = "order_" + Date.now();
+  const amount = Number(process.env.PRICE);
 
   try {
-
-    // 🔥 ADD THIS
-    const amount = Number(process.env.PRICE);
-
     const response = await axios.post(
       "https://api.cashfree.com/pg/orders",
       {
         order_id: orderId,
-        order_amount: amount, // ✅ FIXED
+        order_amount: amount,
         order_currency: "INR",
+
         customer_details: {
           customer_id: userId,
           customer_email: "test@test.com",
           customer_phone: "9999999999"
+        },
+
+        // 🔥 MOST IMPORTANT
+        order_meta: {
+          return_url: `https://facereveal.onrender.com/pages/analysis.html?paid=true`,
+          notify_url: `https://facereveal.onrender.com/webhook`
         }
+
       },
       {
         headers: {
           "x-client-id": process.env.CASHFREE_APP_ID,
           "x-client-secret": process.env.CASHFREE_SECRET_KEY,
-          "x-api-version": "2022-09-01"
+          "x-api-version": "2022-09-01",
+          "Content-Type": "application/json"
         }
       }
     );
 
-    // ✅ FIXED
     db.query(
       "INSERT INTO payments (user_id, order_id, status, amount) VALUES (?, ?, ?, ?)",
       [userId, orderId, "PENDING", amount]
@@ -76,8 +80,12 @@ app.post("/create-order", async (req, res) => {
     });
 
   } catch (err) {
+    console.log("❌ CASHFREE ERROR:");
     console.log(err.response?.data || err.message);
-    res.status(500).send("Error creating order");
+
+    res.status(500).json({
+      error: err.response?.data || err.message
+    });
   }
 });
 

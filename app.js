@@ -36,9 +36,6 @@ const db = mysql.createPool({
 const promiseDb = db.promise();
 
 
-
-
-
 app.post("/create-order", async (req, res) => {
   const { userId } = req.body;
 
@@ -59,31 +56,33 @@ app.post("/create-order", async (req, res) => {
         order_currency: "INR",
         customer_details: {
           customer_id: userId,
-          customer_phone: "9999999999"
+          customer_phone: "9876543210"
         },
         order_meta: {
-          return_url: `https://facereveal.onrender.com/analysis.html?paid=true`
+          return_url: "https://facereveal.onrender.com/analysis.html?paid=true"
         }
       })
     });
 
     const data = await response.json();
+    console.log("Cashfree response:", data);
 
-    if (!data.payment_link) {
-      console.log(data);
-      return res.json({ error: "No payment link" });
+    if (!data.payment_session_id) {
+      return res.json({ error: "No session id", data });
     }
 
-    // 👉 DB me entry
     await promiseDb.query(
       "INSERT INTO payments (user_id, order_id, status, amount) VALUES (?, ?, ?, ?)",
       [userId, orderId, "PENDING", 1]
     );
 
-    res.json({ payment_link: data.payment_link });
+    res.json({
+      payment_session_id: data.payment_session_id,
+      order_id: orderId
+    });
 
   } catch (err) {
-    console.log(err);
+    console.log("Create order error:", err);
     res.status(500).json({ error: "server error" });
   }
 });

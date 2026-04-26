@@ -195,15 +195,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       },
       body: JSON.stringify({ userId })
     });
-
+  
     const dataRes = await res.json();
-
-    if (!dataRes.payment_link) {
+  
+    if (!dataRes.payment_session_id) {
+      console.log(dataRes);
       alert("Payment error");
       return;
     }
-
-    window.location.href = dataRes.payment_link;
+  
+    const cashfree = Cashfree({
+      mode: "production"
+    });
+  
+    cashfree.checkout({
+      paymentSessionId: dataRes.payment_session_id,
+      redirectTarget: "_self"
+    });
   };
 
 });

@@ -147,7 +147,9 @@ app.post("/mark-paid", (req, res) => {
   const { userId } = req.body;
 
   db.query(
-    "UPDATE results SET is_paid=TRUE WHERE user_id=?",
+    `INSERT INTO results (user_id, is_paid)
+     VALUES (?, TRUE)
+     ON DUPLICATE KEY UPDATE is_paid=TRUE`,
     [userId],
     (err) => {
       if (err) {
@@ -159,7 +161,6 @@ app.post("/mark-paid", (req, res) => {
     }
   );
 });
-
 // server start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => {

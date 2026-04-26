@@ -1,21 +1,27 @@
 import { data } from "./data.js";
 
-document.addEventListener ("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
+  // =========================
+  // ✅ USER ID
+  // =========================
   function getUserId() {
     let id = localStorage.getItem("userId");
-  
+
     if (!id) {
       const img = localStorage.getItem("faceImage") || "default";
       id = "user_" + btoa(img).replace(/[^a-zA-Z0-9]/g, "").slice(0, 20);
-  
       localStorage.setItem("userId", id);
     }
-  
+
     return id;
   }
 
   const userId = getUserId();
+
+  // =========================
+  // ✅ PAYMENT RETURN + 1HR SYSTEM
+  // =========================
   const urlParams = new URLSearchParams(window.location.search);
   const paidFromURL = urlParams.get("paid");
 
@@ -28,14 +34,30 @@ document.addEventListener ("DOMContentLoaded", async () => {
       },
       body: JSON.stringify({ userId })
     });
-  
+
+    // ✅ 1 hour validity save
+    localStorage.setItem("paidTime", Date.now());
+
     // URL clean
     window.history.replaceState({}, document.title, window.location.pathname);
-    
+  }
+
+  // ✅ check 1 hour validity
+  const paidTime = localStorage.getItem("paidTime");
+  if (paidTime && (Date.now() - paidTime < 3600000)) {
+
+    await fetch("/mark-paid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId })
+    });
+
   }
 
   // =========================
-  // ✅ HELPERS (TOP pe rakhna MUST)
+  // ✅ HELPERS
   // =========================
   function randomFrom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -54,15 +76,11 @@ document.addEventListener ("DOMContentLoaded", async () => {
     return getRandomCategories(arr, count);
   }
 
-  
-  
-
   // =========================
   // ✅ USER IMAGE
   // =========================
   const img = document.getElementById("userImage");
   const saved = localStorage.getItem("faceImage");
-
   if (saved) img.src = saved;
 
   // =========================
@@ -84,14 +102,12 @@ document.addEventListener ("DOMContentLoaded", async () => {
   });
 
   // =========================
-  // ✅ RESULT LOCK SYSTEM
+  // ✅ RESULT GENERATE / LOAD
   // =========================
-  
   const stored = localStorage.getItem("result_" + userId);
 
   let freeLines = [];
   let mainCat;
-  let paidLines = [];
 
   if (stored) {
     const parsed = JSON.parse(stored);
@@ -107,12 +123,10 @@ document.addEventListener ("DOMContentLoaded", async () => {
 
     const usedLines = new Set();
 
-    // MAIN
     const mainLine = randomFrom(data[mainCat].free);
     usedLines.add(mainLine);
     freeLines.push(mainLine);
 
-    // SIDE
     sideCats.forEach(cat => {
       let line;
       do {
@@ -129,64 +143,61 @@ document.addEventListener ("DOMContentLoaded", async () => {
     }));
   }
 
-  
- // =========================
-// ✅ CHECK PAYMENT
-// =========================
-const check = await fetch("/check-payment/" + userId);
-const status = await check.json();
-
-// =========================
-// ✅ DISPLAY
-// =========================
-const resultDiv = document.getElementById("freeResults");
-resultDiv.innerHTML = "";
-
-if (status.paid) {
-
-  // 👉 PAID USER
-  paidLines = data[mainCat].paid;
-
-  paidLines.forEach(line => {
-    const div = document.createElement("div");
-    div.classList.add("result-line");
-    div.innerText = line;
-    resultDiv.appendChild(div);
+  // =========================
+  // ✅ SAVE RESULT FIRST (IMPORTANT FIX)
+  // =========================
+  await fetch("/save-result", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId,
+      mainCat,
+      freeLines
+    })
   });
 
-} else {
-
-  // 👉 FREE USER
-  freeLines.forEach((line, i) => {
-    const div = document.createElement("div");
-    div.classList.add("result-line");
-
-    div.innerText = line;
-
-    if (i === freeLines.length - 1) {
-      div.classList.add("blur-line");
-    }
-
-    resultDiv.appendChild(div);
-  });
-}
-
-
-fetch("/save-result", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    userId,
-    mainCat,
-    freeLines
-  })
-});
-
+  // =========================
+  // ✅ CHECK PAYMENT
+  // =========================
+  const check = await fetch("/check-payment/" + userId);
+  const status = await check.json();
 
   // =========================
-  // ✅ BUTTON
+  // ✅ DISPLAY
   // =========================
-  let unlocked = false;
+  const resultDiv = document.getElementById("freeResults");
+  resultDiv.innerHTML = "";
+
+  if (status.paid) {
+
+    // 👉 PAID USER
+    data[mainCat].paid.forEach(line => {
+      const div = document.createElement("div");
+      div.classList.add("result-line");
+      div.innerText = line;
+      resultDiv.appendChild(div);
+    });
+
+  } else {
+
+    // 👉 FREE USER
+    freeLines.forEach((line, i) => {
+      const div = document.createElement("div");
+      div.classList.add("result-line");
+
+      div.innerText = line;
+
+      if (i === freeLines.length - 1) {
+        div.classList.add("blur-line");
+      }
+
+      resultDiv.appendChild(div);
+    });
+  }
+
+  // =========================
+  // ✅ UNLOCK BUTTON
+  // =========================
   document.getElementById("unlockBtn").onclick = async () => {
 
     const res = await fetch("/create-order", {
@@ -194,22 +205,17 @@ fetch("/save-result", {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        userId: userId
-      })
+      body: JSON.stringify({ userId })
     });
-  
-    const data = await res.json();
-  
-    // ✅ SAFETY CHECK
-    if (!data.payment_link) {
-      console.error("Payment failed:", data);
-      alert("Payment start nahi hua, backend error hai");
+
+    const dataRes = await res.json();
+
+    if (!dataRes.payment_link) {
+      alert("Payment error");
       return;
     }
-  
-    // ✅ ONLY VALID CASE
-    window.location.href = data.payment_link;
+
+    window.location.href = dataRes.payment_link;
   };
 
 });

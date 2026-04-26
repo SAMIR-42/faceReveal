@@ -2,16 +2,36 @@ import { data } from "./data.js";
 
 document.addEventListener ("DOMContentLoaded", async () => {
 
+  function getUserId() {
+    let id = localStorage.getItem("userId");
+  
+    if (!id) {
+      const img = localStorage.getItem("faceImage") || "default";
+      id = "user_" + btoa(img).replace(/[^a-zA-Z0-9]/g, "").slice(0, 20);
+  
+      localStorage.setItem("userId", id);
+    }
+  
+    return id;
+  }
 
-    // =========================
-  // ✅ PAYMENT RETURN CHECK (TOP PE)
-  // =========================
+  const userId = getUserId();
   const urlParams = new URLSearchParams(window.location.search);
   const paidFromURL = urlParams.get("paid");
 
   if (paidFromURL === "true") {
-    // URL clean kar de (loop avoid)
+
+    await fetch("/mark-paid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId })
+    });
+  
+    // URL clean
     window.history.replaceState({}, document.title, window.location.pathname);
+    
   }
 
   // =========================
@@ -34,16 +54,8 @@ document.addEventListener ("DOMContentLoaded", async () => {
     return getRandomCategories(arr, count);
   }
 
-  function getUserId() {
-    let id = localStorage.getItem("userId");
   
-    if (!id) {
-      id = "user_" + Date.now();
-      localStorage.setItem("userId", id);
-    }
   
-    return id;
-  }
 
   // =========================
   // ✅ USER IMAGE
@@ -74,7 +86,7 @@ document.addEventListener ("DOMContentLoaded", async () => {
   // =========================
   // ✅ RESULT LOCK SYSTEM
   // =========================
-  const userId = getUserId();
+  
   const stored = localStorage.getItem("result_" + userId);
 
   let freeLines = [];

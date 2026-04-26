@@ -40,11 +40,15 @@ app.post("/create-order", async (req, res) => {
   const orderId = "order_" + Date.now();
 
   try {
+
+    // 🔥 ADD THIS
+    const amount = Number(process.env.PRICE);
+
     const response = await axios.post(
       "https://api.cashfree.com/pg/orders",
       {
         order_id: orderId,
-        order_amount: process.env.PRICE,
+        order_amount: amount, // ✅ FIXED
         order_currency: "INR",
         customer_details: {
           customer_id: userId,
@@ -61,10 +65,10 @@ app.post("/create-order", async (req, res) => {
       }
     );
 
-    // save in DB
+    // ✅ FIXED
     db.query(
       "INSERT INTO payments (user_id, order_id, status, amount) VALUES (?, ?, ?, ?)",
-      [userId, orderId, "PENDING", 1]
+      [userId, orderId, "PENDING", amount]
     );
 
     res.json({
@@ -76,7 +80,6 @@ app.post("/create-order", async (req, res) => {
     res.status(500).send("Error creating order");
   }
 });
-
 
 app.post("/webhook", express.json(), (req, res) => {
 

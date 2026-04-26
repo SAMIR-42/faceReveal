@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
+  port: process.env.DB_PORT,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
 });
@@ -40,7 +41,7 @@ app.post("/create-order", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://sandbox.cashfree.com/pg/orders",
+      "https://api.cashfree.com/pg/orders",
       {
         order_id: orderId,
         order_amount: process.env.PRICE,
@@ -103,11 +104,6 @@ app.post("/webhook", express.json(), (req, res) => {
   res.sendStatus(200);
 });
 
-db.query(
-  "INSERT INTO results (user_id, is_paid) VALUES (?, TRUE) ON DUPLICATE KEY UPDATE is_paid=TRUE",
-  [userId]
-);
-
 
 app.get("/check-payment/:userId", (req, res) => {
   const { userId } = req.params;
@@ -125,13 +121,20 @@ app.get("/check-payment/:userId", (req, res) => {
   );
 });
 
-// test route
-app.get("/", (req, res) => {
-  res.send("FaceReveal Server Running 🚀");
+app.post("/save-result", (req, res) => {
+  const { userId, mainCat, freeLines } = req.body;
+
+  db.query(
+    "INSERT INTO results (user_id, main_category, free_lines, is_paid) VALUES (?, ?, ?, FALSE) ON DUPLICATE KEY UPDATE main_category=?, free_lines=?",
+    [userId, mainCat, JSON.stringify(freeLines), mainCat, JSON.stringify(freeLines)]
+  );
+
+  res.sendStatus(200);
 });
+
 
 // server start
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });

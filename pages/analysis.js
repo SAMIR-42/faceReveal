@@ -25,16 +25,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const paidFromURL = urlParams.get("paid");
 
+  
+
   if (paidFromURL === "true") {
-
-    await fetch("/mark-paid", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ userId })
-    });
-
     // ✅ 1 hour validity save
     localStorage.setItem("paidTime", Date.now());
 
@@ -43,16 +36,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ✅ check 1 hour validity
+  let isLocallyPaid = false;
   const paidTime = localStorage.getItem("paidTime");
   if (paidTime && (Date.now() - paidTime < 3600000)) {
 
-    await fetch("/mark-paid", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ userId })
-    });
+    isLocallyPaid = true;
 
   }
 
@@ -168,7 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resultDiv = document.getElementById("freeResults");
   resultDiv.innerHTML = "";
 
-  if (status.paid) {
+  if (status.paid || isLocallyPaid) {
 
     // 👉 PAID USER
     data[mainCat].paid.forEach(line => {

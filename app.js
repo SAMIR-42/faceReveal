@@ -143,6 +143,22 @@ app.post("/save-result", (req, res) => {
   res.sendStatus(200);
 });
 
+app.post("/mark-paid", (req, res) => {
+  const { userId } = req.body;
+
+  db.query(
+    "UPDATE results SET is_paid=TRUE WHERE user_id=?",
+    [userId],
+    (err) => {
+      if (err) {
+        console.log("❌ mark-paid error:", err);
+        return res.sendStatus(500);
+      }
+
+      res.sendStatus(200);
+    }
+  );
+});
 
 // server start
 const PORT = process.env.PORT || 5000;

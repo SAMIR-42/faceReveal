@@ -157,7 +157,6 @@ fetch("/save-result", {
   // ✅ BUTTON
   // =========================
   let unlocked = false;
-
   document.getElementById("unlockBtn").onclick = async () => {
 
     const res = await fetch("/create-order", {
@@ -169,15 +168,18 @@ fetch("/save-result", {
         userId: userId
       })
     });
-    const text = await res.text();
-
-    try {
-      const data = JSON.parse(text);
-      window.location.href = data.payment_link;
-    } catch (e) {
-      console.error("Payment Error:", text);
-      alert("Payment start nahi hua, console check kar");
+  
+    const data = await res.json();
+  
+    // ✅ SAFETY CHECK
+    if (!data.payment_link) {
+      console.error("Payment failed:", data);
+      alert("Payment start nahi hua, backend error hai");
+      return;
     }
+  
+    // ✅ ONLY VALID CASE
+    window.location.href = data.payment_link;
   };
 
 });

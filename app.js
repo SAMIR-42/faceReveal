@@ -123,6 +123,11 @@ app.get("/check-payment/:userId", (req, res) => {
     "SELECT is_paid FROM results WHERE user_id=?",
     [userId],
     (err, result) => {
+      if (err) {
+        console.log("❌ check-payment error:", err);
+        return res.json({ paid: false });
+      }
+
       if (result.length > 0) {
         res.json({ paid: result[0].is_paid });
       } else {
@@ -136,11 +141,20 @@ app.post("/save-result", (req, res) => {
   const { userId, mainCat, freeLines } = req.body;
 
   db.query(
-    "INSERT INTO results (user_id, main_category, free_lines, is_paid) VALUES (?, ?, ?, FALSE) ON DUPLICATE KEY UPDATE main_category=?, free_lines=?",
-    [userId, mainCat, JSON.stringify(freeLines), mainCat, JSON.stringify(freeLines)]
+    `INSERT INTO results (user_id, main_category, free_lines, is_paid)
+     VALUES (?, ?, ?, FALSE)
+     ON DUPLICATE KEY UPDATE 
+     main_category = VALUES(main_category),
+     free_lines = VALUES(free_lines)`,
+    [userId, mainCat, JSON.stringify(freeLines)],
+    (err) => {
+      if (err) {
+        console.log("❌ save-result error:", err);
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    }
   );
-
-  res.sendStatus(200);
 });
 
 app.post("/mark-paid", (req, res) => {
@@ -156,7 +170,6 @@ app.post("/mark-paid", (req, res) => {
         console.log("❌ mark-paid error:", err);
         return res.sendStatus(500);
       }
-
       res.sendStatus(200);
     }
   );

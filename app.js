@@ -159,6 +159,14 @@ app.post("/save-result", async (req, res) => {
   res.json({ success: true });
 });
 
+if (!data.payment_session_id) {
+  console.log("❌ FULL ERROR:", data);
+  return res.json({
+    error: "No session id",
+    full: data
+  });
+}
+
 // server start
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => {

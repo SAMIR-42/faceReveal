@@ -199,8 +199,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dataRes = await res.json();
   
     if (!dataRes.payment_session_id) {
-      console.log(dataRes);
-      alert("Payment error");
+      console.log("BACKEND ERROR:", dataRes);
+      alert("Payment error: " + JSON.stringify(dataRes));
       return;
     }
   

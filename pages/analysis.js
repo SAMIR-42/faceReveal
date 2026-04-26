@@ -2,6 +2,18 @@ import { data } from "./data.js";
 
 document.addEventListener ("DOMContentLoaded", async () => {
 
+
+    // =========================
+  // ✅ PAYMENT RETURN CHECK (TOP PE)
+  // =========================
+  const urlParams = new URLSearchParams(window.location.search);
+  const paidFromURL = urlParams.get("paid");
+
+  if (paidFromURL === "true") {
+    // URL clean kar de (loop avoid)
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
   // =========================
   // ✅ HELPERS (TOP pe rakhna MUST)
   // =========================
@@ -23,8 +35,14 @@ document.addEventListener ("DOMContentLoaded", async () => {
   }
 
   function getUserId() {
-    const img = localStorage.getItem("faceImage") || "default";
-    return btoa(img).slice(0, 20);
+    let id = localStorage.getItem("userId");
+  
+    if (!id) {
+      id = "user_" + Date.now();
+      localStorage.setItem("userId", id);
+    }
+  
+    return id;
   }
 
   // =========================

@@ -92,7 +92,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   // ✅ RESULT GENERATE / LOAD
   // =========================
-  const stored = localStorage.getItem("result_" + userId);
+  const scanId = localStorage.getItem("scanId");
+  const stored = localStorage.getItem("result_" + userId + "_" + scanId);
 
   let freeLines = [];
   let mainCat;
@@ -125,10 +126,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       freeLines.push(line);
     });
 
-    localStorage.setItem("result_" + userId, JSON.stringify({
-      mainCat,
-      lines: freeLines
-    }));
+    const scanId = localStorage.getItem("scanId");
+
+    localStorage.setItem(
+      "result_" + userId + "_" + scanId,
+      JSON.stringify({
+        mainCat,
+        lines: freeLines
+      })
+    );
   }
 
   // =========================
@@ -153,35 +159,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   // ✅ DISPLAY
   // =========================
-  const resultDiv = document.getElementById("freeResults");
-  resultDiv.innerHTML = "";
+  function renderResults() {
+    const resultDiv = document.getElementById("freeResults");
+    resultDiv.innerHTML = "";
   
-  const isPaidUser = status.paid || isLocallyPaid;
-  
-  // 👉 FREE LINES (always show same)
-  freeLines.forEach((line, i) => {
-    const div = document.createElement("div");
-    div.classList.add("result-line");
-    div.innerText = line;
-  
-    if (!isPaidUser && i === freeLines.length - 1) {
-      div.classList.add("blur-line");
-    }
-  
-    resultDiv.appendChild(div);
-  });
-  
-  // 👉 PAID LINES (ONLY IF PAID)
-  if (isPaidUser) {
-    data[mainCat].paid.forEach(line => {
+    freeLines.forEach((line) => {
       const div = document.createElement("div");
-      div.classList.add("result-line", "paid-line");
+      div.classList.add("result-line");
       div.innerText = line;
       resultDiv.appendChild(div);
     });
   
-    resultDiv.classList.add("paid-active");
+    if (status.paid || isLocallyPaid) {
+      data[mainCat].paid.forEach(line => {
+        const div = document.createElement("div");
+        div.classList.add("result-line", "paid-line");
+        div.innerText = line;
+        resultDiv.appendChild(div);
+      });
+  
+      resultDiv.classList.add("paid-active");
+    }
   }
+
   // =========================
   // ✅ UNLOCK BUTTON
   // =========================
@@ -215,9 +215,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const unlockBtn = document.getElementById("unlockBtn");
   if (isPaidUser) {
-    unlockBtn.innerText = "Analysis Unlocked 🔓";
-    unlockBtn.style.opacity = "0.7";
-    unlockBtn.style.cursor = "default";
+    unlockBtn.innerText = "Unlocked ✓";
+    unlockBtn.disabled = true;
+    unlockBtn.style.pointerEvents = "none";
+    unlockBtn.style.opacity = "0.6";
   }
+
+
+  window.addEventListener("focus", async () => {
+    const res = await fetch("/check-payment/" + userId);
+    const status = await res.json();
+  
+    const isPaidUser = status.paid || isLocallyPaid;
+  
+    if (status.paid || isLocallyPaid) {
+      renderResults();
+    }
+  });
 
 });

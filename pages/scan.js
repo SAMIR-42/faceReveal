@@ -154,61 +154,82 @@ isProcessing = false;
     }
   
     // 📸 CAPTURE
-    captureBtn.onclick = () => {
+   // 📸 CAPTURE
+captureBtn.onclick = () => {
 
-        // 👇 agar already capture ho chuka hai
-      if (isCaptured) {
-        window.location.href = "analysis.html";
-       return;
-      }
+  // 👇 agar already capture ho chuka hai
+  if (isCaptured) {
+    window.location.href = "analysis.html";
+    return;
+  }
 
-      if (!faceOk) return;
-    
-      const wrapper = document.querySelector(".camera-wrapper");
-      const oldImg = wrapper.querySelector("img");
-      if (oldImg) oldImg.remove();
-    
-      clearInterval(detectInterval);
-    
-      // 👇 animation hide
-      scanAnimation.classList.add("hide-scan");
-    
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-    
-      const ctx = canvas.getContext("2d");
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
-      ctx.filter = "brightness(1.05) contrast(1.05) saturate(1.1)";
-      ctx.drawImage(video, 0, 0);
-    
-      const img = document.createElement("img");
-      img.src = canvas.toDataURL("image/png");
-    
-      img.style.width = "100%";
-      img.style.height = "100%";
-      img.style.objectFit = "cover";
-      img.style.borderRadius = "50%";
-    
-      video.style.display = "none";
-      wrapper.appendChild(img);
+  if (!faceOk) return;
 
-      localStorage.setItem("faceImage", img.src);
-    
-      retryBtn.disabled = false;
+  const wrapper = document.querySelector(".camera-wrapper");
+  const oldImg = wrapper.querySelector("img");
+  if (oldImg) oldImg.remove();
 
-      // ✅ mark captured
-      isCaptured = true;
+  clearInterval(detectInterval);
 
-      // ✅ button text change
-      captureBtn.innerText = "Reveal Personality";
+  // 👇 animation hide
+  scanAnimation.classList.add("hide-scan");
 
-        // optional: thoda premium feel
-        captureBtn.classList.add("active");
+  // =========================
+  // 📸 IMAGE CAPTURE
+  // =========================
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
 
-        
-    };
+  const ctx = canvas.getContext("2d");
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx.filter = "brightness(1.05) contrast(1.05) saturate(1.1)";
+  ctx.drawImage(video, 0, 0);
+
+  const img = document.createElement("img");
+  img.src = canvas.toDataURL("image/png");
+
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "cover";
+  img.style.borderRadius = "50%";
+
+  video.style.display = "none";
+  wrapper.appendChild(img);
+
+  // =========================
+  // 💾 SAVE FACE
+  // =========================
+  localStorage.setItem("faceImage", img.src);
+
+  // =========================
+  // 🆔 USER + SCAN ID (SAFE FIX)
+  // =========================
+  const userId = localStorage.getItem("userId");
+
+  let scanId = localStorage.getItem("scanId");
+
+  // 👉 FIRST TIME SCAN ID CREATE ONLY
+  if (!scanId) {
+    scanId = crypto.randomUUID();
+    localStorage.setItem("scanId", scanId);
+  }
+
+  // =========================
+  // ❌ OLD RESULT CLEAN (FIXED LOGIC)
+  // =========================
+  localStorage.removeItem("result_" + userId + "_" + scanId);
+
+  // =========================
+  // 🎯 UI STATE UPDATE
+  // =========================
+  retryBtn.disabled = false;
+  isCaptured = true;
+
+  captureBtn.innerText = "Reveal Personality";
+  captureBtn.classList.add("active");
+};
     // 🔁 RETRY
     retryBtn.onclick = () => {
 

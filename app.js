@@ -5,7 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 const axios = require("axios");
-const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
+
 
 
 // middlewares
@@ -73,7 +73,7 @@ app.post("/create-order", async (req, res) => {
         full: data
       });
     }
-    
+
     console.log("Cashfree response:", data);
 
     if (!data.payment_session_id) {

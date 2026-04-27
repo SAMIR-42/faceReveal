@@ -65,6 +65,15 @@ app.post("/create-order", async (req, res) => {
     });
 
     const data = await response.json();
+
+    if (!data.payment_session_id) {
+      console.log("❌ FULL ERROR:", data);
+      return res.json({
+        error: "No session id",
+        full: data
+      });
+    }
+    
     console.log("Cashfree response:", data);
 
     if (!data.payment_session_id) {
@@ -159,13 +168,7 @@ app.post("/save-result", async (req, res) => {
   res.json({ success: true });
 });
 
-if (!data.payment_session_id) {
-  console.log("❌ FULL ERROR:", data);
-  return res.json({
-    error: "No session id",
-    full: data
-  });
-}
+
 
 // server start
 const PORT = process.env.PORT || 5000;

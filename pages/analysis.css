@@ -64,16 +64,13 @@
     margin-top: 25px;
     width: 100%;
     max-width: 320px;
-    height: 200px;
-  
     background: #fff;
     border-radius: 16px;
-  
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  
     display: block;
     align-items: center;
     justify-content: center;
+    padding: 15px;
   }
 
 
@@ -177,18 +174,110 @@
   }
 
   .result-line {
-    background: linear-gradient(135deg, #f9fafc, #ffffff);
+    background: linear-gradient(135deg, #f5f7fb, #ffffff);
     border-radius: 12px;
     padding: 12px 14px;
     margin-bottom: 10px;
     font-size: 13px;
-    color: #222;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+    color: #333;
+  
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   
     opacity: 0;
     transform: translateY(10px);
-    animation: fadeIn 0.6s ease forwards;
+    animation: fadeIn 0.5s ease forwards;
   }
+
+  .paid-line {
+    background: linear-gradient(135deg, #6c63ff, #4a42e8);
+    color: #fff;
+  
+    box-shadow: 0 10px 25px rgba(108,99,255,0.35);
+  
+    border: 1px solid rgba(255,255,255,0.15);
+  
+    position: relative;
+    overflow: hidden;
+  }
+
+  .paid-line::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+  
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.4),
+      transparent
+    );
+  
+    animation: shine 2s infinite;
+  }
+  
+  @keyframes shine {
+    to {
+      left: 100%;
+    }
+  }
+
+  .paid-line {
+    animation: popIn 0.4s ease;
+  }
+  
+  @keyframes popIn {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .blur-line {
+    filter: blur(5px);
+    opacity: 0.6;
+  }
+  
+  .blur-line::after {
+    content: "🔒 Unlock full personality";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    background: rgba(255,255,255,0.9);
+    padding: 6px 10px;
+    border-radius: 8px;
+  
+    font-size: 11px;
+    color: #444;
+    font-weight: 500;
+  }
+
+  .result-box {
+    max-width: 95%;
+  }
+  
+  .result-line {
+    font-size: 14px;
+  }
+
+  .paid-active {
+    animation: glowBg 1s ease;
+  }
+  
+  @keyframes glowBg {
+    0% { box-shadow: 0 0 0 rgba(108,99,255,0); }
+    50% { box-shadow: 0 0 25px rgba(108,99,255,0.3); }
+    100% { box-shadow: 0 0 0 rgba(108,99,255,0); }
+  }
+  
   
   /* delay effect */
   .result-line:nth-child(1){ animation-delay: 0.2s; }

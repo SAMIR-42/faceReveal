@@ -173,6 +173,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     resultDiv.appendChild(div);
   });
   
+  if (isPaidUser) {
+    resultDiv.classList.add("paid-active");
+  }
   // 👉 IF PAID → show paid lines also
   if (isPaidUser) {
     data[mainCat].paid.forEach(line => {

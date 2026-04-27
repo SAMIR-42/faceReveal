@@ -155,17 +155,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   const check = await fetch("/check-payment/" + userId);
   const status = await check.json();
-
-  renderResults();
+  const isPaidUser = status.paid || isLocallyPaid;
+  
+  renderResults(isPaidUser);
+  updateUnlockBtn(isPaidUser);   // ✅ YE ADD KAR
   
   // =========================
   // ✅ DISPLAY
   // =========================
-  function renderResults() {
+  function renderResults(isPaidUser) {
     const resultDiv = document.getElementById("freeResults");
     resultDiv.innerHTML = "";
   
-    // ✅ FREE LINES
+    // ✅ FREE
     freeLines.forEach((line) => {
       const div = document.createElement("div");
       div.classList.add("result-line");
@@ -173,27 +175,34 @@ document.addEventListener("DOMContentLoaded", async () => {
       resultDiv.appendChild(div);
     });
   
-    const isPaidUser = status.paid || isLocallyPaid;
+    // ✅ PAID / BLUR
+    data[mainCat].paid.forEach(line => {
+      const div = document.createElement("div");
+  
+      if (isPaidUser) {
+        div.classList.add("result-line", "paid-line");
+      } else {
+        div.classList.add("result-line", "blur-line");
+      }
+  
+      div.innerText = line;
+      resultDiv.appendChild(div);
+    });
+  
+    resultDiv.classList.remove("paid-active");
+      if (isPaidUser) {
+        resultDiv.classList.add("paid-active");
+      }
+  }
+
+  function updateUnlockBtn(isPaidUser) {
+    const unlockBtn = document.getElementById("unlockBtn");
   
     if (isPaidUser) {
-      // ✅ SHOW FULL
-      data[mainCat].paid.forEach(line => {
-        const div = document.createElement("div");
-        div.classList.add("result-line", "paid-line");
-        div.innerText = line;
-        resultDiv.appendChild(div);
-      });
-  
-      resultDiv.classList.add("paid-active");
-  
-    } else {
-      // 🔒 BLURRED LINES
-      data[mainCat].paid.forEach(line => {
-        const div = document.createElement("div");
-        div.classList.add("result-line", "blur-line");
-        div.innerText = line;
-        resultDiv.appendChild(div);
-      });
+      unlockBtn.innerText = "Unlocked ✓";
+      unlockBtn.disabled = true;
+      unlockBtn.style.pointerEvents = "none";
+      unlockBtn.style.opacity = "0.6";
     }
   }
 
@@ -228,22 +237,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   };
 
-  const unlockBtn = document.getElementById("unlockBtn");
-  const isPaidUser = status.paid || isLocallyPaid;
-  if (isPaidUser) {
-    unlockBtn.innerText = "Unlocked ✓";
-    unlockBtn.disabled = true;
-    unlockBtn.style.pointerEvents = "none";
-    unlockBtn.style.opacity = "0.6";
-  }
-
-
   window.addEventListener("focus", async () => {
     const res = await fetch("/check-payment/" + userId);
     const newStatus = await res.json();
   
     if (newStatus.paid || isLocallyPaid) {
-      renderResults();
+      renderResults(true);       // ✅ sirf true pass kar
+      updateUnlockBtn(true);
     }
   });
 

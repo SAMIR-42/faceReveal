@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let faceOk = false;
     let isCaptured = false;
     let progress = 0;
-let blinkDetected = false;
+    let blinkDetected = false;
   
     async function loadModels() {
       await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
@@ -215,12 +215,6 @@ captureBtn.onclick = () => {
     scanId = crypto.randomUUID();
     localStorage.setItem("scanId", scanId);
   }
-
-  // =========================
-  // ❌ OLD RESULT CLEAN (FIXED LOGIC)
-  // =========================
-  localStorage.removeItem("result_" + userId + "_" + scanId);
-
   // =========================
   // 🎯 UI STATE UPDATE
   // =========================
@@ -265,3 +259,4 @@ captureBtn.onclick = () => {
       captureBtn.innerText = "Capture";
     };
 });
+

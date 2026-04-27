@@ -1,0 +1,80 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  body {
+    background: #0d0f14;
+    color: #eaeef5;
+    line-height: 1.6;
+  }
+  
+  /* HEADER */
+  .header {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .logo {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  /* CONTAINER */
+  .container {
+    max-width: 480px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  /* CARD */
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+  }
+  
+  /* TEXT */
+  h1 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    font-size: 16px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    color: #9fb3ff;
+  }
+  
+  p {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-bottom: 10px;
+  }
+  
+  /* FOOTER */
+  .footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.6;
+  }
+  
+  .footer a {
+    color: #9fb3ff;
+    margin: 0 8px;
+    text-decoration: none;
+  }
+  
+  /* MOBILE FEEL */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 20px;
+    }
+  }

@@ -156,29 +156,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resultDiv = document.getElementById("freeResults");
   resultDiv.innerHTML = "";
 
-  if (status.paid || isLocallyPaid) {
+  const isPaidUser = status.paid || isLocallyPaid;
 
-    // 👉 PAID USER
+  // 👉 ALWAYS show free lines first
+  freeLines.forEach((line, i) => {
+    const div = document.createElement("div");
+    div.classList.add("result-line");
+  
+    div.innerText = line;
+  
+    // blur only if NOT paid
+    if (!isPaidUser && i === freeLines.length - 1) {
+      div.classList.add("blur-line");
+    }
+  
+    resultDiv.appendChild(div);
+  });
+  
+  // 👉 IF PAID → show paid lines also
+  if (isPaidUser) {
     data[mainCat].paid.forEach(line => {
       const div = document.createElement("div");
-      div.classList.add("result-line");
+      div.classList.add("result-line", "paid-line");
       div.innerText = line;
-      resultDiv.appendChild(div);
-    });
-
-  } else {
-
-    // 👉 FREE USER
-    freeLines.forEach((line, i) => {
-      const div = document.createElement("div");
-      div.classList.add("result-line");
-
-      div.innerText = line;
-
-      if (i === freeLines.length - 1) {
-        div.classList.add("blur-line");
-      }
-
       resultDiv.appendChild(div);
     });
   }
@@ -213,5 +213,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       redirectTarget: "_self"
     });
   };
+
+  const unlockBtn = document.getElementById("unlockBtn");
+
+if (isPaidUser) {
+  unlockBtn.disabled = true;
+  unlockBtn.innerText = "Unlocked ✅";
+}
 
 });

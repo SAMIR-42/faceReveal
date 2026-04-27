@@ -23,6 +23,12 @@ app.get("/", (req, res) => {
     }
   }));
 
+  // serve pages folder
+app.use("/pages", express.static(path.join(__dirname, "pages")));
+
+app.get("/analysis.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "pages", "analysis.html"));
+});
 
 // DB connection
 const db = mysql.createPool({
@@ -59,7 +65,7 @@ app.post("/create-order", async (req, res) => {
           customer_phone: "9876543210"
         },
         order_meta: {
-          return_url: "https://facereveal.onrender.com/analysis.html?paid=true"
+          return_url: "https://facereveal.onrender.com/pages/analysis.html?paid=true"
         }
       })
     });

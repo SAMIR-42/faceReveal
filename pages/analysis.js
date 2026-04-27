@@ -155,6 +155,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   const check = await fetch("/check-payment/" + userId);
   const status = await check.json();
+
+  renderResults();
   
   // =========================
   // ✅ DISPLAY
@@ -163,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const resultDiv = document.getElementById("freeResults");
     resultDiv.innerHTML = "";
   
+    // ✅ FREE LINES
     freeLines.forEach((line) => {
       const div = document.createElement("div");
       div.classList.add("result-line");
@@ -170,7 +173,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       resultDiv.appendChild(div);
     });
   
-    if (status.paid || isLocallyPaid) {
+    const isPaidUser = status.paid || isLocallyPaid;
+  
+    if (isPaidUser) {
+      // ✅ SHOW FULL
       data[mainCat].paid.forEach(line => {
         const div = document.createElement("div");
         div.classList.add("result-line", "paid-line");
@@ -179,6 +185,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
   
       resultDiv.classList.add("paid-active");
+  
+    } else {
+      // 🔒 BLURRED LINES
+      data[mainCat].paid.forEach(line => {
+        const div = document.createElement("div");
+        div.classList.add("result-line", "blur-line");
+        div.innerText = line;
+        resultDiv.appendChild(div);
+      });
     }
   }
 
@@ -214,6 +229,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   const unlockBtn = document.getElementById("unlockBtn");
+  const isPaidUser = status.paid || isLocallyPaid;
   if (isPaidUser) {
     unlockBtn.innerText = "Unlocked ✓";
     unlockBtn.disabled = true;
@@ -224,11 +240,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   window.addEventListener("focus", async () => {
     const res = await fetch("/check-payment/" + userId);
-    const status = await res.json();
+    const newStatus = await res.json();
   
-    const isPaidUser = status.paid || isLocallyPaid;
-  
-    if (status.paid || isLocallyPaid) {
+    if (newStatus.paid || isLocallyPaid) {
       renderResults();
     }
   });

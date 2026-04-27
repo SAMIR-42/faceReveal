@@ -238,11 +238,6 @@
       opacity: 1;
     }
   }
-
-  .blur-line {
-    filter: blur(5px);
-    opacity: 0.6;
-  }
   
   .blur-line::after {
     content: "🔒 Unlock full personality";
@@ -277,7 +272,7 @@
     50% { box-shadow: 0 0 25px rgba(108,99,255,0.3); }
     100% { box-shadow: 0 0 0 rgba(108,99,255,0); }
   }
-  
+
   
   /* delay effect */
   .result-line:nth-child(1){ animation-delay: 0.2s; }

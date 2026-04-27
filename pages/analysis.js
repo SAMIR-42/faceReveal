@@ -149,23 +149,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   const check = await fetch("/check-payment/" + userId);
   const status = await check.json();
-
+  
   // =========================
   // ✅ DISPLAY
   // =========================
   const resultDiv = document.getElementById("freeResults");
   resultDiv.innerHTML = "";
-
+  
   const isPaidUser = status.paid || isLocallyPaid;
-
-  // 👉 ALWAYS show free lines first
+  
+  // 👉 FREE LINES (always show same)
   freeLines.forEach((line, i) => {
     const div = document.createElement("div");
     div.classList.add("result-line");
-  
     div.innerText = line;
   
-    // blur only if NOT paid
     if (!isPaidUser && i === freeLines.length - 1) {
       div.classList.add("blur-line");
     }
@@ -173,10 +171,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     resultDiv.appendChild(div);
   });
   
-  if (isPaidUser) {
-    resultDiv.classList.add("paid-active");
-  }
-  // 👉 IF PAID → show paid lines also
+  // 👉 PAID LINES (ONLY IF PAID)
   if (isPaidUser) {
     data[mainCat].paid.forEach(line => {
       const div = document.createElement("div");
@@ -184,8 +179,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       div.innerText = line;
       resultDiv.appendChild(div);
     });
+  
+    resultDiv.classList.add("paid-active");
   }
-
   // =========================
   // ✅ UNLOCK BUTTON
   // =========================
@@ -218,10 +214,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   const unlockBtn = document.getElementById("unlockBtn");
-
-if (isPaidUser) {
-  unlockBtn.disabled = true;
-  unlockBtn.innerText = "Unlocked ✅";
-}
+  if (isPaidUser) {
+    unlockBtn.innerText = "Analysis Unlocked 🔓";
+    unlockBtn.style.opacity = "0.7";
+    unlockBtn.style.cursor = "default";
+  }
 
 });

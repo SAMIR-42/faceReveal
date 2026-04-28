@@ -347,14 +347,31 @@
     font-size: 0.9rem;
   }
   
-  .logo-icon {
+  /* .logo-icon {
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background: var(--accent);
     box-shadow: 0 0 10px var(--accent);
-  }
+  } */
   
+  .logo-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: cover;
+    border-radius: 50%;
+  
+    /* 🔥 glow effect */
+    box-shadow: 0 0 12px var(--accent);
+  
+    /* smooth feel */
+    transition: 0.3s ease;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* thoda spacing badha */
+  }
   /* Nav */
   .nav a {
     font-size: 0.75rem;

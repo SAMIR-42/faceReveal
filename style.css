@@ -759,3 +759,14 @@
       height:240px;
     }
   }
+
+  /* DARK THEME FIX (default) */
+.theme-toggle {
+  color: #fff; /* icon white */
+  background: rgba(255, 255, 255, 0.08); /* halka visible bg */
+}
+
+/* LIGHT THEME me kuch change nahi karna */
+body.light .theme-toggle {
+  color: #111; /* dark icon */
+}

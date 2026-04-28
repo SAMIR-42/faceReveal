@@ -24,26 +24,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   const urlParams = new URLSearchParams(window.location.search);
   const paidFromURL = urlParams.get("paid");
-
+  
   
 
   if (paidFromURL === "true") {
-    // ✅ 1 hour validity save
     localStorage.setItem("paidTime", Date.now());
-
-    // URL clean
+    localStorage.setItem("paidScanId", localStorage.getItem("scanId"));
+  
     window.history.replaceState({}, document.title, window.location.pathname);
   }
+  
+  // ✅ AFTER setting
+  const paidTime = Number(localStorage.getItem("paidTime"));
 
   // ✅ check 1 hour validity
   let isLocallyPaid = false;
-  const paidTime = localStorage.getItem("paidTime");
-  if (paidTime && (Date.now() - paidTime < 3600000)) {
-
+  const paidScanId = localStorage.getItem("paidScanId");
+  const currentScanId = localStorage.getItem("scanId");
+  
+  if (
+    paidTime &&
+    paidScanId === currentScanId &&
+    (Date.now() - paidTime < 3600000)
+  ) {
     isLocallyPaid = true;
-
   }
-
   // =========================
   // ✅ HELPERS
   // =========================
@@ -140,60 +145,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   // ✅ SAVE RESULT FIRST (IMPORTANT FIX)
   // =========================
-  await fetch("/save-result", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId,
-      mainCat,
-      freeLines
-    })
-  });
+ // 👉 sirf first time save kare
+      if (!stored) {
+        await fetch("/save-result", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            mainCat,
+            freeLines
+          })
+        });
+      }
 
-  // =========================
-  // ✅ CHECK PAYMENT
-  // =========================
-  const check = await fetch("/check-payment/" + userId);
-  const status = await check.json();
-  const isPaidUser = status.paid || isLocallyPaid;
+ 
+  // ✅ NEW CONTROLLED FLOW
+        async function initPage() {
+
+          const check = await fetch("/check-payment/" + userId);
+          const status = await check.json();
+        
+          const isPaidUser = status.paid || isLocallyPaid;
+        
+          renderResults(isPaidUser);
+          updateUnlockBtn(isPaidUser);
+        }
+
+        await initPage();
   
-  renderResults(isPaidUser);
-  updateUnlockBtn(isPaidUser);   // ✅ YE ADD KAR
-  
-  // =========================
-  // ✅ DISPLAY
-  // =========================
-  function renderResults(isPaidUser) {
-    const resultDiv = document.getElementById("freeResults");
-    resultDiv.innerHTML = "";
-  
-    // ✅ FREE
-    freeLines.forEach((line) => {
-      const div = document.createElement("div");
-      div.classList.add("result-line");
-      div.innerText = line;
-      resultDiv.appendChild(div);
-    });
-  
-    // ✅ PAID / BLUR
-    data[mainCat].paid.forEach(line => {
-      const div = document.createElement("div");
-  
-      if (isPaidUser) {
-        div.classList.add("result-line", "paid-line");
-      } else {
-        div.classList.add("result-line", "blur-line");
-      }
-  
-      div.innerText = line;
-      resultDiv.appendChild(div);
-    });
-  
-    resultDiv.classList.remove("paid-active");
-      if (isPaidUser) {
-        resultDiv.classList.add("paid-active");
-      }
-  }
 
   function updateUnlockBtn(isPaidUser) {
     const unlockBtn = document.getElementById("unlockBtn");
@@ -203,6 +182,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       unlockBtn.disabled = true;
       unlockBtn.style.pointerEvents = "none";
       unlockBtn.style.opacity = "0.6";
+    } else {
+      unlockBtn.innerText = "Unlock Full Analysis"; // ✅ RESET TEXT
+      unlockBtn.disabled = false;
+      unlockBtn.style.pointerEvents = "auto";
+      unlockBtn.style.opacity = "1";
     }
   }
 
@@ -237,14 +221,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   };
 
-  window.addEventListener("focus", async () => {
-    const res = await fetch("/check-payment/" + userId);
-    const newStatus = await res.json();
+ 
+  //loader
+  function renderResults(isPaidUser) {
+    const resultDiv = document.getElementById("freeResults");
+    resultDiv.innerHTML = "";
   
-    if (newStatus.paid || isLocallyPaid) {
-      renderResults(true);       // ✅ sirf true pass kar
-      updateUnlockBtn(true);
-    }
-  });
+    freeLines.forEach((line) => {
+      const div = document.createElement("div");
+      div.classList.add("result-line");
+      div.innerText = line;
+      resultDiv.appendChild(div);
+    });
+  
+    data[mainCat].paid.forEach(line => {
+      const div = document.createElement("div");
+  
+      if (isPaidUser) {
+        div.classList.add("result-line", "paid-line");
+      } else {
+        div.classList.add("result-line", "blur-line");
+      }
+  
+      div.innerText = line;
+      resultDiv.appendChild(div);
+    });
+  
+    // ✅ SHOW AFTER COMPLETE
+    resultDiv.style.opacity = "1";
+  }
 
 });

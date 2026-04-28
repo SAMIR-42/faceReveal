@@ -5,17 +5,21 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 const axios = require("axios");
+const crypto = require("crypto");
 
 
 
 // middlewares
 app.use(cors());
 
-// static files serve
-app.use(express.static(__dirname));
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
-  });
+// Serve ONLY required frontend assets (avoid leaking server code/.env)
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
+app.get("/index.html", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
+app.get("/style.css", (req, res) => res.sendFile(path.join(__dirname, "style.css")));
+app.get("/script.js", (req, res) => res.sendFile(path.join(__dirname, "script.js")));
+
+app.use("/assets", express.static(path.join(__dirname, "assets")));
+app.use("/models", express.static(path.join(__dirname, "models")));
 
   app.use(express.json({
     verify: (req, res, buf) => {
@@ -23,7 +27,7 @@ app.get("/", (req, res) => {
     }
   }));
 
-  // serve pages folder
+// serve pages folder
 app.use("/pages", express.static(path.join(__dirname, "pages")));
 
 app.get("/analysis.html", (req, res) => {
@@ -41,6 +45,50 @@ const db = mysql.createPool({
 
 const promiseDb = db.promise();
 
+// Paid lines live ONLY on server
+const paidData = {
+  overthinking: [
+    "Your overthinking is linked to past situations where you felt misunderstood.",
+    "You often doubt your decisions even after making them."
+  ],
+  trust: [
+    "Once trust is broken, you rarely give second chances.",
+    "You value loyalty more than anything."
+  ],
+  confidence: [
+    "Your confidence sometimes hides inner doubts.",
+    "You build confidence through experience, not shortcuts."
+  ],
+  emotional: [
+    "You hide your emotions behind a calm face.",
+    "You struggle to express feelings openly."
+  ],
+  social: [
+    "You avoid unnecessary social interactions.",
+    "You prefer meaningful conversations over small talk."
+  ]
+};
+
+function verifyCashfreeWebhook(req) {
+  const ts = req.header("x-webhook-timestamp");
+  const sig = req.header("x-webhook-signature");
+  if (!ts || !sig) return false;
+
+  const secret = process.env.CASHFREE_SECRET_KEY;
+  if (!secret) return false;
+
+  const signedPayload = `${ts}${req.rawBody || ""}`;
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(signedPayload)
+    .digest("base64");
+
+  try {
+    return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
 
 app.post("/create-order", async (req, res) => {
   const { userId } = req.body;
@@ -48,6 +96,7 @@ app.post("/create-order", async (req, res) => {
   const orderId = "order_" + Date.now();
 
   try {
+    const baseUrl = process.env.PUBLIC_BASE_URL || "https://facereveal.onrender.com";
     const response = await fetch("https://api.cashfree.com/pg/orders", {
       method: "POST",
       headers: {
@@ -65,7 +114,8 @@ app.post("/create-order", async (req, res) => {
           customer_phone: "9876543210"
         },
         order_meta: {
-          return_url: "https://facereveal.onrender.com/pages/analysis.html?paid=true"
+          // Never trust URL params for unlocking; only used for UX polling
+          return_url: `${baseUrl}/pages/analysis.html?order_id=${orderId}`
         }
       })
     });
@@ -104,6 +154,12 @@ app.post("/create-order", async (req, res) => {
 
 app.post("/webhook", async (req, res) => {
   try {
+    // Reject spoofed webhooks
+    if (!verifyCashfreeWebhook(req)) {
+      console.log("❌ Webhook signature invalid");
+      return res.sendStatus(401);
+    }
+
     const data = req.body;
 
     const orderId = data.data.order.order_id;
@@ -159,6 +215,25 @@ app.get("/check-payment/:userId", async (req, res) => {
   }
 
   res.json({ paid: false });
+});
+
+app.get("/paid-lines/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  const [rows] = await promiseDb.query(
+    "SELECT main_category, is_paid FROM results WHERE user_id=?",
+    [userId]
+  );
+
+  if (!rows.length) return res.status(404).json({ error: "no result" });
+
+  if (rows[0].is_paid !== 1) {
+    return res.status(403).json({ error: "not paid" });
+  }
+
+  const mainCat = rows[0].main_category;
+  const paidLines = paidData[mainCat] || [];
+  res.json({ paidLines });
 });
 
 app.post("/save-result", async (req, res) => {

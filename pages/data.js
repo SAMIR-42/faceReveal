@@ -14,10 +14,6 @@ export const categories = [
       free: [
         "You tend to overthink small situations.",
         "You replay conversations in your mind."
-      ],
-      paid: [
-        "Your overthinking is linked to past situations where you felt misunderstood.",
-        "You often doubt your decisions even after making them."
       ]
     },
   
@@ -25,10 +21,6 @@ export const categories = [
       free: [
         "You don’t trust people easily.",
         "You observe people before opening up."
-      ],
-      paid: [
-        "Once trust is broken, you rarely give second chances.",
-        "You value loyalty more than anything."
       ]
     },
 
@@ -37,10 +29,6 @@ export const categories = [
         free: [
           "You appear confident on the outside.",
           "People often see you as self-assured."
-        ],
-        paid: [
-          "Your confidence sometimes hides inner doubts.",
-          "You build confidence through experience, not shortcuts."
         ]
       },
       
@@ -48,10 +36,6 @@ export const categories = [
         free: [
           "You feel emotions deeply.",
           "You get attached faster than most people."
-        ],
-        paid: [
-          "You hide your emotions behind a calm face.",
-          "You struggle to express feelings openly."
         ]
       },
       
@@ -59,10 +43,6 @@ export const categories = [
         free: [
           "You observe people before interacting.",
           "You choose your circle carefully."
-        ],
-        paid: [
-          "You avoid unnecessary social interactions.",
-          "You prefer meaningful conversations over small talk."
         ]
       }
   };

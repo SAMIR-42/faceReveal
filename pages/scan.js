@@ -201,20 +201,18 @@ captureBtn.onclick = () => {
   // =========================
   // 💾 SAVE FACE
   // =========================
-  localStorage.setItem("faceImage", img.src);
+  // Use sessionStorage so back/leave forces re-scan
+  sessionStorage.setItem("faceImage", img.src);
 
   // =========================
-  // 🆔 USER + SCAN ID (SAFE FIX)
+  // 🆔 SCAN ID (fresh per capture)
   // =========================
-  const userId = localStorage.getItem("userId");
+  const scanId = crypto.randomUUID();
+  sessionStorage.setItem("scanId", scanId);
 
-  let scanId = localStorage.getItem("scanId");
-
-  // 👉 FIRST TIME SCAN ID CREATE ONLY
-  if (!scanId) {
-    scanId = crypto.randomUUID();
-    localStorage.setItem("scanId", scanId);
-  }
+  // Clear any old unlock/payment UI state for new scan
+  sessionStorage.removeItem("orderId");
+  sessionStorage.removeItem("paidConfirmed");
   // =========================
   // 🎯 UI STATE UPDATE
   // =========================

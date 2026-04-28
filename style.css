@@ -760,13 +760,16 @@
     }
   }
 
-  /* DARK THEME FIX (default) */
+  /* DARK THEME (default) */
 .theme-toggle {
-  color: #fff; /* icon white */
-  background: rgba(255, 255, 255, 0.08); /* halka visible bg */
+  background: #fff;   /* 👈 pure white bg */
+  color: #000;        /* 👈 black eye icon */
+  box-shadow: 0 0 12px rgba(255,255,255,0.4); /* thoda glow */
 }
 
-/* LIGHT THEME me kuch change nahi karna */
+/* LIGHT THEME same rahe */
 body.light .theme-toggle {
-  color: #111; /* dark icon */
+  background: rgba(0,0,0,0.08);
+  color: #111;
+  box-shadow: none;
 }

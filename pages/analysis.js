@@ -13,13 +13,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Per-scan identity for backend (prevents "pay once unlock forever")
   const userId = "scan_" + scanId;
 
-  // Clear scan context as soon as user leaves this page (back/forward included)
-  window.addEventListener("pagehide", () => {
+  function clearScanContext() {
     sessionStorage.removeItem("scanId");
     sessionStorage.removeItem("faceImage");
     sessionStorage.removeItem("orderId");
     sessionStorage.removeItem("paidConfirmed");
+    sessionStorage.removeItem("paymentInProgress");
     sessionStorage.removeItem("result_" + userId);
+  }
+
+  // Industrial rule:
+  // - If payment redirect is happening, DO NOT clear state (otherwise it bounces to scan.html).
+  // - If paid is confirmed and user leaves after viewing, clear so next time they must re-scan.
+  // - If unpaid and user leaves, clear (fresh scan required).
+  window.addEventListener("pagehide", () => {
+    const paymentInProgress = sessionStorage.getItem("paymentInProgress") === "true";
+    const paidConfirmed = sessionStorage.getItem("paidConfirmed") === "true";
+
+    if (paymentInProgress && !paidConfirmed) return;
+
+    clearScanContext();
   });
 
   // =========================
@@ -122,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function setUnlockBtnState(state) {
     // state: "locked" | "unlocking" | "unlocked"
     if (state === "unlocked") {
-      unlockBtn.innerText = "Unlocked ✓";
+      unlockBtn.innerHTML = `<i class="fa-solid fa-lock-open"></i> Unlocked`;
       unlockBtn.disabled = true;
       unlockBtn.style.pointerEvents = "none";
       unlockBtn.style.opacity = "0.65";
@@ -130,14 +143,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (state === "unlocking") {
-      unlockBtn.innerText = "Processing payment...";
+      unlockBtn.innerHTML = `<span class="btn-spinner" aria-hidden="true"></span> Processing...`;
       unlockBtn.disabled = true;
       unlockBtn.style.pointerEvents = "none";
       unlockBtn.style.opacity = "0.85";
       return;
     }
 
-    unlockBtn.innerText = "Unlock Full Analysis";
+    unlockBtn.innerHTML = `<i class="fa-solid fa-lock"></i> Unlock Full Analysis`;
     unlockBtn.disabled = false;
     unlockBtn.style.pointerEvents = "auto";
     unlockBtn.style.opacity = "1";
@@ -177,7 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     paidLines.forEach((line) => {
       const div = document.createElement("div");
-      div.classList.add("result-line", "paid-line");
+      div.classList.add("result-line", "paid-line", "paid-reveal");
       div.innerText = line;
       resultDiv.appendChild(div);
     });
@@ -202,6 +215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderPaid(paidData.paidLines || []);
     setUnlockBtnState("unlocked");
     sessionStorage.setItem("paidConfirmed", "true");
+    sessionStorage.removeItem("paymentInProgress");
     return true;
   }
 
@@ -214,6 +228,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   unlockBtn.onclick = async () => {
     setUnlockBtnState("unlocking");
+    sessionStorage.setItem("paymentInProgress", "true");
 
     const res = await fetch("/create-order", {
       method: "POST",
@@ -227,6 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("BACKEND ERROR:", dataRes);
       alert("Payment error. Please try again.");
       setUnlockBtnState("locked");
+      sessionStorage.removeItem("paymentInProgress");
       return;
     }
 
@@ -244,6 +260,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const returnedOrderId = urlParams.get("order_id");
   if (returnedOrderId) {
     sessionStorage.setItem("orderId", returnedOrderId);
+    sessionStorage.setItem("paymentInProgress", "true");
     window.history.replaceState({}, document.title, window.location.pathname);
   }
 

@@ -239,20 +239,21 @@
     }
   }
   
-  .blur-line::after {
-    content: "🔒 Unlock full personality";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  
-    background: rgba(255,255,255,0.9);
-    padding: 6px 10px;
-    border-radius: 8px;
-  
-    font-size: 11px;
-    color: #444;
-    font-weight: 500;
+  .paid-reveal {
+    animation: paidReveal 0.55s cubic-bezier(.2,.9,.2,1) both;
+  }
+
+  @keyframes paidReveal {
+    0% {
+      filter: blur(10px);
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+    }
+    100% {
+      filter: blur(0);
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
 
   .result-box {
@@ -294,7 +295,7 @@
   
   /* overlay text */
   .blur-line::after {
-    content: "Unlock to reveal";
+    content: "Locked • Pay ₹1 to reveal";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -304,21 +305,83 @@
     border-radius: 8px;
     font-size: 11px;
     color: #444;
+    font-weight: 600;
   }
 
+  .unlock-cta {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .unlock-meta {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .unlock-price,
+  .unlock-trust {
+    font-size: 11px;
+    color: #555;
+    background: linear-gradient(135deg, rgba(108,99,255,0.10), rgba(74,66,232,0.06));
+    border: 1px solid rgba(108,99,255,0.16);
+    padding: 6px 8px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
 
   #unlockBtn {
-    margin: 20px auto;
-    display: block;
-    padding: 12px 18px;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 14px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #6c63ff, #4a42e8);
     color: #fff;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 650;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(108,99,255,0.3);
+    box-shadow: 0 10px 24px rgba(108,99,255,0.28);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  }
+
+  #unlockBtn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.02);
+    box-shadow: 0 14px 28px rgba(108,99,255,0.33);
+  }
+
+  #unlockBtn:active {
+    transform: translateY(0px);
+    box-shadow: 0 10px 22px rgba(108,99,255,0.26);
+  }
+
+  #unlockBtn:disabled {
+    cursor: not-allowed;
+    filter: saturate(0.8);
+  }
+
+  .btn-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.45);
+    border-top-color: rgba(255,255,255,1);
+    display: inline-block;
+    animation: spin 0.75s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
 

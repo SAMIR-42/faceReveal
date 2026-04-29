@@ -15,12 +15,23 @@
   /* HEADER */
   .header {
     padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
   
   .logo {
     display: flex;
     align-items: center;
     gap: 6px;
+  }
+
+  .scan-header-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    min-width: 220px;
   }
 /*   
   .logo-icon {
@@ -420,17 +431,32 @@
    ========================= */
 
 .live-scan-bar {
-  width: 100%;
-  padding: 10px 14px;
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
+}
+
+.scan-header-right .live-scan-bar {
+  width: auto;
+  padding: 0;
+  box-sizing: content-box;
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: none;
+}
+
+.scan-header-right .live-meta {
+  align-items: flex-end;
+}
+
+.scan-header-right .live-title {
+  font-size: 11px;
+  text-align: right;
+}
+
+.scan-header-right .live-counter {
+  font-size: 11px;
 }
 
 .live-scan-bar .live-stack {
@@ -504,6 +530,20 @@
 }
 
 @media (max-width: 480px) {
+  .scan-header-right {
+    min-width: 0;
+  }
+
+  .scan-header-right .live-stack {
+    width: 60px;
+    height: 32px;
+  }
+
+  .scan-header-right .live-face {
+    width: 28px;
+    height: 28px;
+  }
+
   .live-scan-bar {
     padding: 9px 10px;
     gap: 10px;

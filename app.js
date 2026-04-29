@@ -54,6 +54,7 @@ const db = mysql.createPool({
 
 const promiseDb = db.promise();
 
+
 // Paid lines live ONLY on server
 const paidData = {
   overthinking: [

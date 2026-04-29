@@ -8,7 +8,6 @@ export const categories = [
     "confidence"
   ];
 
-
   export const data = {
     overthinking: {
       free: [

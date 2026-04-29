@@ -58,23 +58,47 @@ const promiseDb = db.promise();
 const paidData = {
   overthinking: [
     "Your overthinking is linked to past situations where you felt misunderstood.",
-    "You often doubt your decisions even after making them."
+    "You often doubt your decisions even after making them.",
+    "You visualize future outcomes so much that it delays your next step.",
+    "Even when things go right, your mind keeps searching for what could go wrong."
   ],
   trust: [
     "Once trust is broken, you rarely give second chances.",
-    "You value loyalty more than anything."
+    "You value loyalty more than anything.",
+    "You need consistency before you fully open up.",
+    "You treat small promises like big ones—because you know how it feels to be let down."
   ],
   confidence: [
     "Your confidence sometimes hides inner doubts.",
-    "You build confidence through experience, not shortcuts."
+    "You build confidence through experience, not shortcuts.",
+    "You’re strong, but you still evaluate yourself deeply.",
+    "When you commit, you follow through even if it takes time."
   ],
   emotional: [
     "You hide your emotions behind a calm face.",
-    "You struggle to express feelings openly."
+    "You struggle to express feelings openly.",
+    "You experience emotions intensely, then try to stay composed.",
+    "People may not realize how much you feel until it’s too late to ignore."
   ],
   social: [
     "You avoid unnecessary social interactions.",
-    "You prefer meaningful conversations over small talk."
+    "You prefer meaningful conversations over small talk.",
+    "You observe first, then connect when it feels right.",
+    "You don’t chase attention—you choose connection with purpose."
+  ],
+
+  ambition: [
+    "You’re driven by progress, not just results.",
+    "Slow growth still feels better to you than sudden unstable success.",
+    "You measure success by effort and consistency.",
+    "You push yourself when you want to prove your potential."
+  ],
+
+  introvert: [
+    "You protect your energy and keep your world calm.",
+    "You prefer depth over frequency in relationships.",
+    "Your best ideas come when you’re alone with your thoughts.",
+    "You may seem distant, but you’re actually very attentive."
   ]
 };
 
@@ -230,7 +254,7 @@ app.get("/paid-lines/:userId", async (req, res) => {
   const userId = req.params.userId;
 
   const [rows] = await promiseDb.query(
-    "SELECT main_category, is_paid FROM results WHERE user_id=?",
+    "SELECT main_category, is_paid, free_lines FROM results WHERE user_id=?",
     [userId]
   );
 
@@ -241,7 +265,28 @@ app.get("/paid-lines/:userId", async (req, res) => {
   }
 
   const mainCat = rows[0].main_category;
-  const paidLines = paidData[mainCat] || [];
+
+  const paidPool = paidData[mainCat] || [];
+
+  // Link logic:
+  // analysis.js picks exact indices from data[mainCat].free
+  // and sends them to backend inside `free_lines` JSON.
+  // paidData[mainCat][sameIndex] is shown on unlock.
+  let paidLines = paidPool.slice(0, 4);
+
+  try {
+    const parsed = JSON.parse(rows[0].free_lines || "null");
+    const indices = Array.isArray(parsed?.mainFreeIndices) ? parsed.mainFreeIndices : null;
+    if (indices && indices.length) {
+      paidLines = indices
+        .map((idx) => paidPool[idx])
+        .filter(Boolean)
+        .slice(0, 4);
+    }
+  } catch {
+    // If older stored rows don't have indices, fallback to first 4.
+  }
+
   res.json({ paidLines });
 });
 

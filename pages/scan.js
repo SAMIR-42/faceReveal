@@ -258,6 +258,103 @@ captureBtn.onclick = () => {
     };
 
     // =========================
+    // LIVE RECENTLY ANALYZED (fake UI)
+    // =========================
+    const liveCountEl = document.getElementById("liveCount");
+    const liveFaces = [
+      document.getElementById("liveFace1"),
+      document.getElementById("liveFace2"),
+      document.getElementById("liveFace3")
+    ].filter(Boolean);
+
+    function shuffleInPlace(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function setLiveFaces(pool) {
+      if (!liveFaces.length || !pool?.length) return;
+      const chosen = shuffleInPlace([...pool]).slice(0, liveFaces.length);
+      liveFaces.forEach((img, idx) => {
+        img.src = chosen[idx];
+      });
+    }
+
+    // Fallback pool: agar `assets/live-scan` images available na ho to bhi UI smooth rahe
+    const fallbackPool = Array.from({ length: 15 }, (_, i) => `../assets/${i + 1}.jpg`);
+    let livePool = fallbackPool;
+
+    // Counter: hamesha 200+ rahe, kabhi up kabhi down
+    let liveCount = Math.floor(210 + Math.random() * 120);
+    if (liveCountEl) liveCountEl.textContent = liveCount;
+
+    const minCount = 200;
+    const bumpCounter = () => {
+      if (!liveCountEl) return;
+      liveCountEl.classList.remove("count-bump");
+      // force reflow so animation re-triggers
+      void liveCountEl.offsetWidth;
+      liveCountEl.classList.add("count-bump");
+    };
+
+    setInterval(() => {
+      if (!liveCountEl) return;
+      const delta = Math.floor(Math.random() * 7) - 2; // -2..+4
+      liveCount = Math.max(minCount, liveCount + delta);
+      // keep within a reasonable display range
+      liveCount = Math.min(999, liveCount);
+      liveCountEl.textContent = liveCount;
+      bumpCounter();
+    }, 1800);
+
+    // Update avatar faces occasionally
+    setInterval(() => {
+      setLiveFaces(livePool);
+    }, 5200);
+
+    // Load live-scan images once per visit
+    (async () => {
+      try {
+        const loaded = [];
+        const maxTry = 30; // `live-scan/1.jpg` ... `live-scan/30.jpg`
+        const candidates = [];
+        for (let i = 1; i <= maxTry; i++) {
+          candidates.push(`../assets/live-scan/${i}.jpg`);
+          candidates.push(`../assets/live-scan/${i}.png`);
+        }
+
+        const checks = candidates.map((url) => {
+          return new Promise((resolve) => {
+            const im = new Image();
+            im.onload = () => resolve({ ok: true, url });
+            im.onerror = () => resolve({ ok: false, url });
+            im.src = url;
+          });
+        });
+
+        const results = await Promise.all(checks);
+        results.forEach((r) => {
+          if (r.ok) loaded.push(r.url);
+        });
+
+        if (loaded.length >= 3) {
+          livePool = loaded;
+          setLiveFaces(livePool);
+        } else {
+          setLiveFaces(fallbackPool);
+        }
+      } catch {
+        setLiveFaces(fallbackPool);
+      }
+    })();
+
+    // initial render
+    setLiveFaces(livePool);
+
+    // =========================
     // GUIDE POPUP (scan help)
     // =========================
     const guideBtn = document.getElementById("guideBtn");

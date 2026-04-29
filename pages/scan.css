@@ -415,6 +415,114 @@
   color: #444;
 }
 
+/* =========================
+   LIVE RECENT ANALYZED
+   ========================= */
+
+.live-scan-bar {
+  width: 100%;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.live-scan-bar .live-stack {
+  position: relative;
+  height: 38px;
+  width: 78px;
+  flex: 0 0 auto;
+}
+
+.live-face {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.95);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  transition: transform 0.2s ease;
+}
+
+#liveFace1 { left: 0; top: 2px; z-index: 1; }
+#liveFace2 { left: 22px; top: 0; z-index: 2; }
+#liveFace3 { left: 44px; top: 2px; z-index: 3; }
+
+.live-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.live-title {
+  font-size: 12px;
+  color: #bbb;
+  font-weight: 700;
+}
+
+.live-counter {
+  font-size: 12px;
+  color: #ddd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ff88;
+  box-shadow: 0 0 12px rgba(0,255,136,0.75);
+  animation: livePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* little bump animation for counter */
+.count-bump {
+  animation: countBump 260ms ease;
+}
+
+@keyframes countBump {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 480px) {
+  .live-scan-bar {
+    padding: 9px 10px;
+    gap: 10px;
+  }
+
+  .live-face {
+    width: 30px;
+    height: 30px;
+  }
+
+  #liveFace2 { left: 20px; }
+  #liveFace3 { left: 40px; }
+
+  .live-title,
+  .live-counter {
+    font-size: 11px;
+  }
+}
+
 #scanAnimation {
   position: absolute;
   width: 100%;

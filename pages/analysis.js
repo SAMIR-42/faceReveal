@@ -89,40 +89,45 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let freeLines = [];
   let mainCat;
+  let mainFreeIndices = [];
+
+  const TOTAL_LINES = 4;
 
   if (stored) {
     const parsed = JSON.parse(stored);
     freeLines = parsed.freeLines;
     mainCat = parsed.mainCat;
+    mainFreeIndices = Array.isArray(parsed.mainFreeIndices) ? parsed.mainFreeIndices : [];
   } else {
     mainCat = randomFrom(Object.keys(data));
-    const others = Object.keys(data).filter((c) => c !== mainCat);
-    const sideCats = getRandomCategories(others, 2);
+    const pool = data[mainCat]?.free || [];
+    const needed = Math.min(TOTAL_LINES, pool.length);
 
-    const usedLines = new Set();
-    const mainLine = randomFrom(data[mainCat].free);
-    usedLines.add(mainLine);
-    freeLines.push(mainLine);
-
-    sideCats.forEach((cat) => {
-      let line;
-      do {
-        line = randomFrom(data[cat].free);
-      } while (usedLines.has(line));
-      usedLines.add(line);
-      freeLines.push(line);
-    });
+    // Pick exact indices so paid lines can match the same "free" pairing.
+    // (paidData[mainCat][sameIndex] will be returned on unlock)
+    const availableIdx = pool.map((_, i) => i);
+    for (let i = availableIdx.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [availableIdx[i], availableIdx[j]] = [availableIdx[j], availableIdx[i]];
+    }
+    mainFreeIndices = availableIdx.slice(0, needed);
+    freeLines = mainFreeIndices.map((idx) => pool[idx]);
 
     sessionStorage.setItem(
       "result_" + userId,
-      JSON.stringify({ mainCat, freeLines })
+      JSON.stringify({ mainCat, freeLines, mainFreeIndices })
     );
 
     // Persist on server (so webhook can mark this scan as paid)
     await fetch("/save-result", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, mainCat, freeLines })
+      body: JSON.stringify({
+        userId,
+        mainCat,
+        // Store indices too (so backend can show linked paid lines)
+        freeLines: { freeLines, mainFreeIndices }
+      })
     });
   }
 
@@ -169,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Paid placeholders only (no real text on client)
-    const placeholderCount = 2;
+    const placeholderCount = TOTAL_LINES;
     for (let i = 0; i < placeholderCount; i++) {
       const div = document.createElement("div");
       div.classList.add("result-line", "blur-line");

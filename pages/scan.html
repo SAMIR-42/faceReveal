@@ -96,6 +96,32 @@
       </div>
     </div>
 
+    <!-- GUIDE BUTTON + POPUP -->
+    <button id="guideBtn" type="button" aria-label="How to scan">
+      <i class="fa-solid fa-circle-question"></i>
+    </button>
+
+    <div id="guideOverlay" class="guide-overlay" aria-hidden="true">
+      <div id="guideModal" class="guide-modal" role="dialog" aria-modal="true">
+        <button id="guideClose" type="button" aria-label="Close guide">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <h2 class="guide-title">Quick Guide</h2>
+        <ol class="guide-steps">
+          <li>
+            Tap <b>Enable Camera</b> and allow camera permission.
+          </li>
+          <li>
+            Keep your face clear in the frame (good light) and blink if needed.
+          </li>
+          <li>
+            Tap <b>Capture</b> to take the photo, then tap <b>Reveal Personality</b> to go to analysis.
+          </li>
+        </ol>
+      </div>
+    </div>
+
     <script src="scan.js"></script>
   </body>
 </html>

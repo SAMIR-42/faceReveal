@@ -256,5 +256,44 @@ captureBtn.onclick = () => {
       isCaptured = false;
       captureBtn.innerText = "Capture";
     };
+
+    // =========================
+    // GUIDE POPUP (scan help)
+    // =========================
+    const guideBtn = document.getElementById("guideBtn");
+    const guideOverlay = document.getElementById("guideOverlay");
+    const guideModal = document.getElementById("guideModal");
+    const guideClose = document.getElementById("guideClose");
+
+    function openGuide() {
+      if (!guideOverlay) return;
+      guideOverlay.classList.add("open");
+      guideOverlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeGuide() {
+      if (!guideOverlay) return;
+      guideOverlay.classList.remove("open");
+      guideOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    guideBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openGuide();
+    });
+
+    guideClose?.addEventListener("click", () => closeGuide());
+
+    // Backdrop click pe close (mobile + laptop friendly)
+    guideOverlay?.addEventListener("click", (e) => {
+      if (e.target === guideOverlay) closeGuide();
+    });
+
+    // Modal ke andar click close na kare
+    guideModal?.addEventListener("click", (e) => e.stopPropagation());
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeGuide();
+    });
 });
 

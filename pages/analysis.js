@@ -129,6 +129,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   // RENDER
   // =========================
+  let isPaidUI = false;
+
   const unlockBtn = document.getElementById("unlockBtn");
   const resultDiv = document.getElementById("freeResults");
 
@@ -176,6 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     resultDiv.style.opacity = "1";
+    isPaidUI = false;
   }
 
   function renderPaid(paidLines) {
@@ -197,6 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     resultDiv.style.opacity = "1";
     document.querySelector(".result-box")?.classList.add("paid-active");
+    isPaidUI = true;
   }
 
   async function refreshPaymentState() {
@@ -204,8 +208,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const status = await check.json();
 
     if (!status.paid) {
-      renderLocked();
       setUnlockBtnState("locked");
+      // Payment cancel/back ke case me polling runs hoti rehti hai.
+      // Agar locked UI ko har baar re-render kiya, to animations restart ho ke "loop" jaisa lagta hai.
+      if (!isPaidUI) return false;
+      renderLocked();
       return false;
     }
 

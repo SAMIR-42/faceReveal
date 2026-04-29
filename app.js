@@ -12,11 +12,20 @@ const crypto = require("crypto");
 // middlewares
 app.use(cors());
 
+
 // Serve ONLY required frontend assets (avoid leaking server code/.env)
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/index.html", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/style.css", (req, res) => res.sendFile(path.join(__dirname, "style.css")));
 app.get("/script.js", (req, res) => res.sendFile(path.join(__dirname, "script.js")));
+
+app.get("/sitemap.xml", (req, res) => {
+  res.sendFile(path.join(__dirname, "sitemap.xml"));
+});
+
+app.get("/robots.txt", (req, res) => {
+  res.sendFile(path.join(__dirname, "robots.txt"));
+});
 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/models", express.static(path.join(__dirname, "models")));

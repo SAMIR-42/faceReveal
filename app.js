@@ -100,7 +100,221 @@ const paidData = {
     "You prefer depth over frequency in relationships.",
     "Your best ideas come when you’re alone with your thoughts.",
     "You may seem distant, but you’re actually very attentive."
-  ]
+  ],
+
+  self_doubt: [
+    "Your self-doubt comes from caring deeply about doing things the right way.",
+    "You question yourself not because you're weak, but because you think ahead.",
+    "Even when you're capable, your mind keeps checking if you're enough.",
+    "That doubt you feel is actually your mind trying to protect your growth."
+  ],
+
+  late_night_thinker: [
+    "Your deepest clarity comes when the world goes silent.",
+    "At night, your mind connects thoughts you ignore during the day.",
+    "You process emotions honestly when there are no distractions.",
+    "Those late-night thoughts are shaping your real self quietly."
+  ],
+  
+  silent_observer: [
+    "You read people without them realizing it.",
+    "Your silence gives you more understanding than most conversations.",
+    "You notice patterns in behavior that others miss completely.",
+    "You don’t react fast because you already see deeper."
+  ],
+  
+  hidden_strength: [
+    "Your strength is built from things you never talk about.",
+    "You’ve handled situations alone that could break others.",
+    "You stay stable even when everything feels heavy inside.",
+    "People see calm, but they don’t see the battles you’ve won."
+  ],
+    
+  people_pleaser: [
+    "You naturally understand what makes others feel comfortable.",
+    "You adjust yourself to keep peace, even when it's hard.",
+    "You carry emotional responsibility without asking for it.",
+    "Your kindness often goes deeper than people realize."
+  ],
+  
+  emotional_control: [
+    "You’ve trained yourself to stay calm even when emotions rise.",
+    "You choose silence over impulsive reactions.",
+    "You feel everything, but you show only what’s necessary.",
+    "Your control comes from understanding emotions, not avoiding them."
+  ],
+  
+  fear_of_loss: [
+    "You value people deeply, which makes losing them feel heavy.",
+    "You hold onto connections because they matter to you.",
+    "Your fear comes from knowing how rare real bonds are.",
+    "You don’t take relationships lightly, and that shows."
+  ],
+  
+  deep_thinker: [
+    "Your mind naturally goes beyond what’s visible.",
+    "You connect dots others don’t even notice.",
+    "You search for meaning instead of accepting surface answers.",
+    "Your depth makes you see reality differently."
+  ],
+
+  
+  attachment_style: [
+    "You don’t attach easily, but when you do, it’s real.",
+    "Your connections are based on emotional depth, not convenience.",
+    "You value stability more than temporary excitement.",
+    "Once connected, you invest genuinely."
+  ],
+  
+  inner_conflict: [
+    "Your mind balances logic and emotion constantly.",
+    "You see both sides, which makes decisions harder.",
+    "That conflict comes from your ability to think deeply.",
+    "You don’t act fast because you understand consequences."
+  ],
+  
+  validation_seeker: [
+    "You notice small reactions because they matter to you.",
+    "You read between the lines in people’s behavior.",
+    "You don’t just hear words—you observe responses.",
+    "That awareness makes you socially sharp."
+  ],
+  
+  past_overthink: [
+    "You revisit the past to understand it fully.",
+    "You learn from moments others forget.",
+    "Your mind holds onto details to avoid repeating mistakes.",
+    "Those memories shape your awareness."
+  ],
+  
+  future_anxiety: [
+    "You think ahead because you want control over outcomes.",
+    "You prepare mentally for what might happen.",
+    "Your mind plans multiple paths to stay safe.",
+    "That anxiety is actually your brain trying to protect you."
+  ],
+
+  
+  calm_outside: [
+    "You’ve mastered showing calm even in chaos.",
+    "People rely on your composed nature.",
+    "You don’t let emotions control your outer image.",
+    "Your calmness hides a lot of depth inside."
+  ],
+  
+  sensitive_mind: [
+    "You pick up emotions that others ignore.",
+    "You feel intensity in simple moments.",
+    "Your sensitivity makes you more aware of people.",
+    "That depth is rare, not weak."
+  ],
+  
+  energy_protection: [
+    "You know where your energy should be invested.",
+    "You avoid draining situations without explaining much.",
+    "You protect your peace like it matters—because it does.",
+    "Not everyone gets access to your time and energy."
+  ],
+  
+  loyal_nature: [
+    "Once you trust, you stand by people strongly.",
+    "You don’t switch sides based on convenience.",
+    "Your loyalty is based on values, not situations.",
+    "You stay real even when things change."
+  ],
+  
+  trust_issues_deep: [
+    "You’ve learned to trust slowly for a reason.",
+    "You observe actions before believing words.",
+    "You protect yourself from false expectations.",
+    "Your trust is earned, not given easily."
+  ],
+
+  decision_delay: [
+    "You think before acting because outcomes matter to you.",
+    "You consider angles others ignore.",
+    "You avoid rushing into things blindly.",
+    "Your delay is actually calculated thinking."
+  ],
+  
+  over_analysis: [
+    "You break situations into details naturally.",
+    "You don’t accept things without understanding them.",
+    "You go deeper even when it's not required.",
+    "That analysis gives you a different perspective."
+  ],
+  
+  self_pressure: [
+    "You push yourself because you see your potential.",
+    "You expect more because you know you can do more.",
+    "You don’t settle for average easily.",
+    "That pressure comes from your inner standards."
+  ],
+  
+  fear_of_judgement: [
+    "You stay aware of how actions are perceived.",
+    "You think before expressing yourself openly.",
+    "You observe reactions to avoid negative attention.",
+    "That awareness makes you socially careful."
+  ],
+
+  
+  over_caring: [
+    "You think about others even when they don’t.",
+    "You adjust your actions to avoid hurting people.",
+    "You carry emotional weight quietly.",
+    "Your care is deeper than most."
+  ],
+  
+  emotional_memory: [
+    "You remember how things felt, not just what happened.",
+    "Emotions stay stored in your mind longer.",
+    "You connect memories with feelings instantly.",
+    "That’s why some moments never leave you."
+  ],
+  
+  silent_expectations: [
+    "You expect understanding without explaining everything.",
+    "You notice when people don’t meet your silent hopes.",
+    "You don’t demand—you observe.",
+    "Your expectations are quiet but strong."
+  ],
+  
+  inner_voice: [
+    "You trust your inner thoughts more than external noise.",
+    "You reflect before making moves.",
+    "Your intuition guides you silently.",
+    "That voice inside you is sharper than you think."
+  ],
+
+  self_reflection: [
+    "You constantly evaluate yourself to improve.",
+    "You notice your own patterns clearly.",
+    "You grow by understanding your actions.",
+    "That reflection keeps you evolving."
+  ],
+  
+  unspoken_feelings: [
+    "You feel more than you express.",
+    "You keep emotions controlled within.",
+    "Not everything you feel is shown outside.",
+    "There’s always more going on inside you."
+  ],
+  
+  mental_loops: [
+    "Your mind replays things to find clarity.",
+    "You get stuck because you want answers.",
+    "You revisit thoughts until they make sense.",
+    "That loop comes from your need to understand."
+  ],
+  
+  connection_depth: [
+    "You seek real bonds, not temporary ones.",
+    "You connect where there is understanding.",
+    "You avoid shallow interactions naturally.",
+    "Depth matters more to you than numbers."
+  ],
+  
 };
 
 function verifyCashfreeWebhook(req) {

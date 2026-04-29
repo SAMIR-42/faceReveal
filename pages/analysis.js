@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const img = document.getElementById("userImage");
   img.src = faceImage;
 
+  
   // =========================
   // COMMUNITY IMAGES
   // =========================

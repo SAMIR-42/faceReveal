@@ -217,7 +217,7 @@ captureBtn.onclick = () => {
   // 🎯 UI STATE UPDATE
   // =========================
   retryBtn.disabled = false;
-  isCaptured = true;
+  isCaptured = true; 
 
   captureBtn.innerText = "Reveal Personality";
   captureBtn.classList.add("active");

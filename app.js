@@ -20,6 +20,7 @@ app.get("/style.css", (req, res) => res.sendFile(path.join(__dirname, "style.css
 app.get("/script.js", (req, res) => res.sendFile(path.join(__dirname, "script.js")));
 
 app.get("/sitemap.xml", (req, res) => {
+  res.header("Content-Type", "application/xml");
   res.sendFile(path.join(__dirname, "sitemap.xml"));
 });
 

@@ -390,6 +390,32 @@
     box-shadow: 0 14px 28px rgba(108,99,255,0.33);
   }
 
+  /* Analysis emoji: adjust these values independently for desktop. */
+  .analysis-emoji {
+    position: absolute;
+    top: 250px;
+    /* right: 24px; */
+
+    bottom: auto;
+    left: 65px;
+    width: 90px;
+    height: auto;
+    object-fit: contain;
+    z-index: 2;
+  }
+
+  /* Analysis emoji: adjust these values independently for mobile. */
+  @media (max-width: 480px) {
+    .analysis-emoji {
+      top: 260px;
+      right: 12px;
+      bottom: auto;
+      left: auto;
+      width: 70px;
+      height: auto;
+    }
+  }
+
   #unlockBtn:active {
     transform: translateY(0px);
     box-shadow: 0 10px 22px rgba(108,99,255,0.26);

@@ -528,6 +528,7 @@
   
   .stat-box {
     flex: 1;
+    position: relative;
   }
   
   .stat-box h2 {
@@ -757,6 +758,55 @@
   
     .mind-img{
       height:240px;
+    }
+
+  }
+
+  /* DESKTOP: common transparent-image settings */
+  .stat-trusted .emoji-3,
+  .stat-accuracy .emoji-2 {
+    position: absolute;
+    object-fit: contain;
+    display: block;
+    max-width: none;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    transform: translateY(-50%);
+  }
+
+  /* DESKTOP: change imoji3 width, height and right for left/right movement */
+  .stat-trusted .emoji-3 {
+    width: 130px;
+    height: 130px;
+    top: 50%;
+    right: calc(60% + 0px);
+  }
+
+  /* DESKTOP: change imoji2 width, height and left for left/right movement */
+  .stat-accuracy .emoji-2 {
+    width: 150px;
+    height: 150px;
+    top: 50%;
+    left: calc(50% + 0px);
+  }
+
+  /* MOBILE: change imoji3 width, height and right independently */
+  @media (max-width: 768px) {
+    .stat-trusted .emoji-3 {
+      width: 220px;
+      height: 220px;
+      top: 150px;
+      right: calc(90% + 0px);
+    }
+
+    /* MOBILE: change imoji2 width, height and left independently */
+    .stat-accuracy .emoji-2 {
+      width: 220px;
+      height: 220px;
+      top: 0px;
+      left: calc(80% + 0px);
     }
   }
 
